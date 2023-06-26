@@ -1,0 +1,351 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "online store API",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "description": "server address",
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/api/tasks": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Task was created"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong request body"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Creating task",
+        "tags": [
+          "Tasks"
+        ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskResponseDto"
+                  }
+                }
+              }
+            },
+            "description": "Tasks were recieved"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Getting all created tasks",
+        "tags": [
+          "Tasks"
+        ]
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "Tasks were deleted"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Deleting all created tasks",
+        "tags": [
+          "Tasks"
+        ]
+      }
+    },
+    "/api/tasks?id=": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Task ID",
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task was recived"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong ID"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Getting task by ID",
+        "tags": [
+          "Tasks"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "description": "Task ID",
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskUpdateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Task was updated"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong ID/request body"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Updating task",
+        "tags": [
+          "Tasks"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "description": "Task ID",
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task was deleted"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong ID"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Deleting task by ID",
+        "tags": [
+          "Tasks"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TaskRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 25,
+            "description": "Task name",
+            "example": "Name"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 250,
+            "description": "Task description",
+            "example": "Description"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "description": "Dto for creating a task"
+      },
+      "TaskUpdateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 25,
+            "description": "Task name",
+            "example": "Name"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 250,
+            "description": "Task description",
+            "example": "Description"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "New",
+              "In progress",
+              "Done"
+            ],
+            "example": "New"
+          }
+        },
+        "description": "Dto for updating a task"
+      },
+      "TaskResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Task ID",
+            "form": "long",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Task name",
+            "example": "Name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Task description",
+            "example": "Description"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "New",
+              "In progress",
+              "Done"
+            ],
+            "example": "New"
+          }
+        },
+        "description": "Dto for getting a task"
+      },
+      "ErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "message"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Error date",
+            "example": "2020-20-20T20:20:20.20"
+          }
+        },
+        "description": "Error description"
+      }
+    }
+  }
+}
