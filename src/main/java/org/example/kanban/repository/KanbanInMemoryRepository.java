@@ -7,6 +7,7 @@ import org.example.kanban.model.Task;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 public class KanbanInMemoryRepository implements KanbanRepository {
@@ -23,8 +24,8 @@ public class KanbanInMemoryRepository implements KanbanRepository {
     }
 
     @Override
-    public Task getTaskById(long id) {
-        return tasks.get(id);
+    public Optional<Task> getTaskById(long id) {
+        return Optional.ofNullable(tasks.get(id));
     }
 
     @Override
@@ -33,8 +34,7 @@ public class KanbanInMemoryRepository implements KanbanRepository {
     }
 
     @Override
-    public void updateTask(Task newTask, long id) {
-        Task oldTask = tasks.get(id);
+    public void updateTask(Task newTask, Task oldTask) {
         if (newTask.getName() != null && !newTask.getName().isBlank()) {
             oldTask.setName(newTask.getName());
         }
@@ -57,7 +57,7 @@ public class KanbanInMemoryRepository implements KanbanRepository {
     }
 
 
-    private boolean containsTask(long id) {
+    public boolean containsTask(long id) {
         return tasks.containsKey(id);
     }
 }

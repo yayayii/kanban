@@ -1,15 +1,14 @@
-package org.example.kanban.repository;
+package org.example.kanban.service;
 
 import org.example.kanban.model.Task;
 
 import java.util.Collection;
-import java.util.Optional;
 
-public interface KanbanRepository {
+public interface KanbanService {
     void createTask(Task task);
-    Optional<Task> getTaskById(long id);
+    Task getTaskById(long id);
     Collection<Task> getAllTasks();
-    void updateTask(Task newTask, Task oldTask);
+    void updateTask(Task newTask, long id);
     void deleteTaskById(long id);
     void deleteAllTasks();
 }
