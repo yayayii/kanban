@@ -12,7 +12,7 @@ import java.util.Optional;
 @Slf4j
 public class KanbanInMemoryRepository implements KanbanRepository {
     private final Map<Long, Task> tasks = new HashMap<>();
-    private static long id = 1;
+    private long id = 1;
 
 
     @Override
@@ -54,10 +54,5 @@ public class KanbanInMemoryRepository implements KanbanRepository {
     @Override
     public void deleteAllTasks() {
         tasks.clear();
-    }
-
-
-    public boolean containsTask(long id) {
-        return tasks.containsKey(id);
     }
 }
