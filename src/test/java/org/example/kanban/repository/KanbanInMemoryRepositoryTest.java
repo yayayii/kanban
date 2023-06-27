@@ -26,7 +26,6 @@ public class KanbanInMemoryRepositoryTest {
         Task task = Task.builder().name("name").description("description").build();
 
         repository.createTask(task);
-
         assertEquals(1, task.getId());
         assertEquals(TaskStatus.NEW.getStatusName(), task.getStatus());
     }
@@ -36,7 +35,6 @@ public class KanbanInMemoryRepositoryTest {
         Task task = mock(Task.class);
 
         repository.createTask(task);
-
         assertEquals(task, repository.getTaskById(1).get());
     }
 
@@ -52,7 +50,6 @@ public class KanbanInMemoryRepositoryTest {
 
         repository.createTask(task);
         repository.createTask(task2);
-
         assertEquals(new ArrayList<>(List.of(task, task2)), new ArrayList<>(repository.getAllTasks()));
     }
 
@@ -68,25 +65,11 @@ public class KanbanInMemoryRepositoryTest {
 
         repository.createTask(oldTask);
         repository.updateTask(newTask, oldTask);
-        Task actualTask = repository.getTaskById(1).get();
 
+        Task actualTask = repository.getTaskById(1).get();
         assertEquals(newTask.getName(), actualTask.getName());
         assertEquals(newTask.getDescription(), actualTask.getDescription());
         assertEquals(newTask.getStatus(), actualTask.getStatus());
-    }
-
-    @Test
-    void updateTask_shouldNotUpdateTaskFields_whenNullValuesPassed() {
-        Task oldTask = Task.builder().name("name").description("description").build();
-        Task newTask = mock(Task.class);
-
-        repository.createTask(oldTask);
-        repository.updateTask(newTask, oldTask);
-        Task actualTask = repository.getTaskById(1).get();
-
-        assertEquals(oldTask.getName(), actualTask.getName());
-        assertEquals(oldTask.getDescription(), actualTask.getDescription());
-        assertEquals(oldTask.getStatus(), actualTask.getStatus());
     }
 
     @Test
@@ -94,8 +77,8 @@ public class KanbanInMemoryRepositoryTest {
         Task task = mock(Task.class);
 
         repository.createTask(task);
-        repository.deleteTaskById(1);
 
+        repository.deleteTaskById(1);
         assertTrue(repository.getTaskById(1).isEmpty());
     }
 
@@ -106,8 +89,8 @@ public class KanbanInMemoryRepositoryTest {
 
         repository.createTask(task);
         repository.createTask(task2);
-        repository.deleteAllTasks();
 
+        repository.deleteAllTasks();
         assertEquals(new ArrayList<>(), new ArrayList<>(repository.getAllTasks()));
     }
 }

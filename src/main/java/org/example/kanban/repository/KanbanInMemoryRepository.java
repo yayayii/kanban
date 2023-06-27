@@ -35,15 +35,9 @@ public class KanbanInMemoryRepository implements KanbanRepository {
 
     @Override
     public void updateTask(Task newTask, Task oldTask) {
-        if (newTask.getName() != null && !newTask.getName().isBlank()) {
-            oldTask.setName(newTask.getName());
-        }
-        if (newTask.getDescription() != null && !newTask.getDescription().isBlank()) {
-            oldTask.setDescription(newTask.getDescription());
-        }
-        if (newTask.getStatus() != null) {
-            oldTask.setStatus(newTask.getStatus());
-        }
+        oldTask.setName(newTask.getName());
+        oldTask.setDescription(newTask.getDescription());
+        oldTask.setStatus(newTask.getStatus());
     }
 
     @Override

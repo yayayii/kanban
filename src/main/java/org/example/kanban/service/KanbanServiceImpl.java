@@ -10,7 +10,16 @@ import java.util.Collection;
 
 @Slf4j
 public class KanbanServiceImpl implements KanbanService {
-    private final KanbanRepository kanbanRepository = new KanbanInMemoryRepository();
+    private final KanbanRepository kanbanRepository;
+
+
+    public KanbanServiceImpl() {
+        kanbanRepository = new KanbanInMemoryRepository();
+    }
+
+    public KanbanServiceImpl(KanbanRepository kanbanRepository) {
+        this.kanbanRepository = kanbanRepository;
+    }
 
 
     @Override
@@ -65,11 +74,11 @@ public class KanbanServiceImpl implements KanbanService {
         if (task.getName() == null || task.getName().isBlank()) {
             throw new ValidationException("Name shouldn't be empty");
         }
-        if (task.getDescription() == null || task.getDescription().isBlank()) {
-            throw new ValidationException("Description shouldn't be empty");
-        }
         if (task.getName().length() > 25) {
             throw new ValidationException("Name maximum length is 25 characters");
+        }
+        if (task.getDescription() == null || task.getDescription().isBlank()) {
+            throw new ValidationException("Description shouldn't be empty");
         }
         if (task.getDescription().length() > 250) {
             throw new ValidationException("Description maximum length is 250 characters");
