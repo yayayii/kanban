@@ -18,90 +18,96 @@ import static org.mockito.Mockito.*;
 public class KanbanServiceImplTest {
     @Mock
     private KanbanRepository mockRepository;
-    private KanbanService kanbanService;
+    private KanbanService service;
 
 
     @BeforeEach
-    void beforeEach() {
-        kanbanService = new KanbanServiceImpl(mockRepository);
+    void setUp() {
+        service = new KanbanServiceImpl(mockRepository);
     }
 
 
+    //createTask
     @Test
     void createTask_shouldCreateTask() {
         Task task = Task.builder().name("name").description("description").build();
 
-        kanbanService.createTask(task);
+        service.createTask(task);
         verify(mockRepository).createTask(task);
     }
 
+    //getTaskById
     @Test
     void getTaskById_shouldReturnTask() {
         Task task = mock(Task.class);
         when(mockRepository.getTaskById(anyLong())).thenReturn(Optional.of(task));
 
-        assertEquals(task, kanbanService.getTaskById(1));
+        assertEquals(task, service.getTaskById(1));
     }
 
+    //getAllTasks
     @Test
     void getAllTasks_shouldReturnCollection() {
-        kanbanService.getAllTasks();
+        service.getAllTasks();
         verify(mockRepository).getAllTasks();
     }
 
+    //updateTask
     @Test
     void updateTask_shouldUpdateTask() {
         Task task = mock(Task.class);
         Task newTask = Task.builder().name("name").description("description").build();
         when(mockRepository.getTaskById(anyLong())).thenReturn(Optional.of(task));
 
-        kanbanService.updateTask(newTask, 1);
+        service.updateTask(newTask, 1);
         verify(mockRepository).updateTask(newTask, task);
     }
 
+    //deleteTaskById
     @Test
     void deleteTaskByID_shouldDeleteTaskById() {
         Task task = mock(Task.class);
         when(mockRepository.getTaskById(anyLong())).thenReturn(Optional.of(task));
 
-        kanbanService.deleteTaskById(1);
+        service.deleteTaskById(1);
         verify(mockRepository).deleteTaskById(1);
     }
 
+    //deleteAllTasks
     @Test
     void deleteAllTasks_shouldDeleteAllTasks() {
-        kanbanService.deleteAllTasks();
+        service.deleteAllTasks();
         verify(mockRepository).deleteAllTasks();
     }
 
-    //test validateTask
+    //validateTask
     @Test
     void validateTask_shouldThrowValidationException_whenAddingTaskWithWrongName() {
         Task task = Task.builder().name(null).build();
-        assertThrows(ValidationException.class, () -> kanbanService.createTask(task));
+        assertThrows(ValidationException.class, () -> service.createTask(task));
 
         task.setName("");
-        assertThrows(ValidationException.class, () -> kanbanService.createTask(task));
+        assertThrows(ValidationException.class, () -> service.createTask(task));
 
         task.setName(String.copyValueOf(new char[26]));
-        assertThrows(ValidationException.class, () -> kanbanService.createTask(task));
+        assertThrows(ValidationException.class, () -> service.createTask(task));
     }
 
     @Test
     void validateTask_shouldThrowValidationException_whenAddingTaskWithWrongDescription() {
         Task task = Task.builder().name("name").description(null).build();
-        assertThrows(ValidationException.class, () -> kanbanService.createTask(task));
+        assertThrows(ValidationException.class, () -> service.createTask(task));
 
         task.setDescription("");
-        assertThrows(ValidationException.class, () -> kanbanService.createTask(task));
+        assertThrows(ValidationException.class, () -> service.createTask(task));
 
         task.setDescription(String.copyValueOf(new char[251]));
-        assertThrows(ValidationException.class, () -> kanbanService.createTask(task));
+        assertThrows(ValidationException.class, () -> service.createTask(task));
     }
 
-    //test optional getTaskById
+    //getTaskById Optional
     @Test
     void getTaskById_shouldThrowValidationException_whenNoTasks() {
-        assertThrows(ValidationException.class, () -> kanbanService.getTaskById(1));
+        assertThrows(ValidationException.class, () -> service.getTaskById(1));
     }
 }

@@ -2,6 +2,7 @@ package org.example.kanban.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import lombok.extern.slf4j.Slf4j;
 import org.example.kanban.enum_.ApiPath;
@@ -20,10 +21,15 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 public class TaskHandler {
-    private final KanbanService kanbanService = new KanbanServiceImpl();
-    private final Gson gson = new Gson();
+    private final KanbanService service;
+    private final Gson gson;
     private HttpExchange httpExchange;
 
+
+    public TaskHandler() {
+        service = new KanbanServiceImpl();
+        gson = new Gson();
+    }
 
     //method handling
     public void createContextForTasks(HttpExchange httpExchange) throws IOException {
@@ -55,13 +61,13 @@ public class TaskHandler {
         String path = httpExchange.getRequestURI().getPath();
         String body = new String(httpExchange.getRequestBody().readAllBytes(), UTF_8);
 
-        //POST + "/tasks" + request body
+        //POST + request body
         if (ApiPath.TASK.getPath().equals(path)) {
-            Task task = gson.fromJson(JsonParser.parseString(body).toString(), Task.class);
             try {
+                Task task = gson.fromJson(JsonParser.parseString(body).toString(), Task.class);
                 log.info("KanbanController - Creating task: {}", task);
-                kanbanService.createTask(task);
-            } catch (ValidationException e) {
+                service.createTask(task);
+            } catch (ValidationException | JsonSyntaxException e) {
                 sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                 return;
             } catch (Exception e) {
@@ -82,12 +88,12 @@ public class TaskHandler {
         String response;
 
         if (ApiPath.TASK.getPath().equals(path)) {
-            //GET + "/tasks?id="
+            //GET + "?id="
             if (query != null && (query.contains("id="))) {
                 try {
                     long id = Integer.parseInt(query.substring("id=".length()));
                     log.info("KanbanController - getting task by id = {}", id);
-                    response = gson.toJson(kanbanService.getTaskById(id));
+                    response = gson.toJson(service.getTaskById(id));
                 } catch (NumberFormatException | ValidationException e) {
                     sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                     return;
@@ -95,11 +101,11 @@ public class TaskHandler {
                     sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
                     return;
                 }
-                //GET + "/tasks"
+                //GET
             } else {
                 try {
                     log.info("KanbanController - getting all tasks");
-                    response = gson.toJson(kanbanService.getAllTasks());
+                    response = gson.toJson(service.getAllTasks());
                 } catch (Exception e) {
                     sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
                     return;
@@ -118,14 +124,14 @@ public class TaskHandler {
         String body = new String(httpExchange.getRequestBody().readAllBytes(), UTF_8);
         String query = httpExchange.getRequestURI().getQuery();
 
-        //PUT + "/tasks?id=" + request body
+        //PUT + "?id=" + request body
         if (ApiPath.TASK.getPath().equals(path)) {
-            Task newTask = gson.fromJson(JsonParser.parseString(body).toString(), Task.class);
             try {
+                Task newTask = gson.fromJson(JsonParser.parseString(body).toString(), Task.class);
                 long id = Integer.parseInt(query.substring("id=".length()));
                 log.info("KanbanController - updating task: {} / id = {}", newTask, id);
-                kanbanService.updateTask(newTask, id);
-            } catch (NumberFormatException | ValidationException e) {
+                service.updateTask(newTask, id);
+            } catch (NumberFormatException | ValidationException | JsonSyntaxException e) {
                 sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                 return;
             } catch (Exception e) {
@@ -145,12 +151,12 @@ public class TaskHandler {
         String query = httpExchange.getRequestURI().getQuery();
 
         if (ApiPath.TASK.getPath().equals(path)) {
-            //DELETE + "/tasks?id="
+            //DELETE + "?id="
             if (query != null && (query.contains("id="))) {
                 try {
                     long id = Integer.parseInt(query.substring("id=".length()));
                     log.info("KanbanController - deleting task by id = {}", id);
-                    kanbanService.deleteTaskById(id);
+                    service.deleteTaskById(id);
                 } catch (NumberFormatException | ValidationException e) {
                     sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                     return;
@@ -158,11 +164,11 @@ public class TaskHandler {
                     sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
                     return;
                 }
-                //DELETE + "/tasks"
+                //DELETE
             } else {
                 try {
                     log.info("KanbanController - deleting all tasks");
-                    kanbanService.deleteAllTasks();
+                    service.deleteAllTasks();
                 } catch (Exception e) {
                     sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
                     return;
@@ -186,7 +192,13 @@ public class TaskHandler {
 
     private void sendError(String errorMessage, int errorStatusCode) throws IOException {
         log.error(errorMessage);
-        sendJson(gson.toJson(new ErrorResponse(errorMessage, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))), errorStatusCode);
+        sendJson(gson.toJson(
+                new ErrorResponse(
+                        errorMessage,
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                )),
+                errorStatusCode
+        );
         httpExchange.sendResponseHeaders(errorStatusCode, 0);
     }
 }

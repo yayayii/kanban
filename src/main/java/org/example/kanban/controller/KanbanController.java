@@ -9,19 +9,20 @@ import java.net.InetSocketAddress;
 
 @Slf4j
 public class KanbanController {
-    private static final int PORT = 8080;
+    private final int port;
+    private final HttpServer server;
 
-    private final HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
 
-
-    public KanbanController() throws IOException {
+    public KanbanController(int port) throws IOException {
+        this.port = port;
+        server = HttpServer.create(new InetSocketAddress(port), 0);
         TaskHandler tasksHandler = new TaskHandler();
         server.createContext(ApiPath.TASK.getPath(), tasksHandler::createContextForTasks);
     }
 
 
     public void start() {
-        log.info("Server was launched on port {}", PORT);
+        log.info("Server was launched on port {}", port);
         server.start();
     }
 }

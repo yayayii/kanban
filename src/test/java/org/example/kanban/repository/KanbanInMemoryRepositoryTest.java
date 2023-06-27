@@ -16,11 +16,11 @@ public class KanbanInMemoryRepositoryTest {
 
 
     @BeforeEach
-    void beforeEach() {
+    void setUp() {
         repository = new KanbanInMemoryRepository();
     }
 
-
+    //createTask
     @Test
     void createTask_shouldInitializeTaskFields() {
         Task task = Task.builder().name("name").description("description").build();
@@ -30,6 +30,7 @@ public class KanbanInMemoryRepositoryTest {
         assertEquals(TaskStatus.NEW.getStatusName(), task.getStatus());
     }
 
+    //getTaskById
     @Test
     void getTaskById_shouldReturnTask_whenExists() {
         Task task = mock(Task.class);
@@ -43,6 +44,7 @@ public class KanbanInMemoryRepositoryTest {
         assertTrue(repository.getTaskById(1).isEmpty());
     }
 
+    //getAllTasks
     @Test
     void getAllTasks_shouldReturnTaskCollection_whenTaskAdded() {
         Task task = mock(Task.class);
@@ -58,6 +60,7 @@ public class KanbanInMemoryRepositoryTest {
         assertEquals(new ArrayList<>(), new ArrayList<>(repository.getAllTasks()));
     }
 
+    //updateTask
     @Test
     void updateTask_shouldUpdateTaskFields() {
         Task oldTask = Task.builder().name("name").description("description").build();
@@ -72,6 +75,7 @@ public class KanbanInMemoryRepositoryTest {
         assertEquals(newTask.getStatus(), actualTask.getStatus());
     }
 
+    //deleteTaskById
     @Test
     void deleteTaskById_shouldDeleteTask() {
         Task task = mock(Task.class);
@@ -82,6 +86,7 @@ public class KanbanInMemoryRepositoryTest {
         assertTrue(repository.getTaskById(1).isEmpty());
     }
 
+    //deleteAllTasks
     @Test
     void deleteAllTasks_shouldDeleteTasks() {
         Task task = mock(Task.class);
