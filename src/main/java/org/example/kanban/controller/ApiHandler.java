@@ -17,15 +17,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 public class ApiHandler {
-    private final KanbanService service;
-    private final Gson gson;
-    private HttpExchange httpExchange;
-
-
-    public ApiHandler() {
-        service = new KanbanServiceImpl();
-        gson = new Gson();
-    }
+    private final KanbanService service = new KanbanServiceImpl();
+    protected final Gson gson = new Gson();
+    protected HttpExchange httpExchange;
 
 
     //method handling
@@ -90,14 +84,14 @@ public class ApiHandler {
     }
 
 
-    private void sendJson(String object, int statusCode) throws IOException {
+    protected void sendJson(String object, int statusCode) throws IOException {
         byte[] json = object.getBytes(UTF_8);
         httpExchange.getResponseHeaders().add("Content-Type", "application/json");
         httpExchange.sendResponseHeaders(statusCode, json.length);
         httpExchange.getResponseBody().write(json);
     }
 
-    private void sendError(String errorMessage, int errorStatusCode) throws IOException {
+    protected void sendError(String errorMessage, int errorStatusCode) throws IOException {
         log.error(errorMessage);
         sendJson(gson.toJson(
                         new ErrorResponse(

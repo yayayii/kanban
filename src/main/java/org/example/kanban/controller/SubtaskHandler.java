@@ -2,13 +2,12 @@ package org.example.kanban.controller;
 
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.sun.net.httpserver.HttpExchange;
 import lombok.extern.slf4j.Slf4j;
 import org.example.kanban.enum_.ApiPath;
 import org.example.kanban.exception.ValidationException;
-import org.example.kanban.model.Task;
+import org.example.kanban.model.Subtask;
 import org.example.kanban.service.KanbanServiceImpl;
-import org.example.kanban.service.TaskService;
+import org.example.kanban.service.SubtaskService;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -16,45 +15,20 @@ import java.net.HttpURLConnection;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
-public class TaskHandler extends ApiHandler {
-    private final TaskService service = new KanbanServiceImpl();
+public class SubtaskHandler extends TaskHandler {
+    private final SubtaskService service = new KanbanServiceImpl();
 
 
     @Override
-    public void createContext(HttpExchange httpExchange) throws IOException {
-        this.httpExchange = httpExchange;
-        try {
-            switch (httpExchange.getRequestMethod()) {
-                case "POST":
-                    handlePostMethod();
-                    break;
-                case "GET":
-                    handleGetMethod();
-                    break;
-                case "PUT":
-                    handlePutMethod();
-                    break;
-                case "DELETE":
-                    handleDeleteMethod();
-                    break;
-                default:
-                    sendError("Wrong request method", HttpURLConnection.HTTP_BAD_METHOD);
-            }
-        } finally {
-            httpExchange.close();
-        }
-    }
-
-    //path handling
     protected void handlePostMethod() throws IOException {
         String path = httpExchange.getRequestURI().getPath();
         String body = new String(httpExchange.getRequestBody().readAllBytes(), UTF_8);
 
-        if (ApiPath.TASK.getPath().equals(path)) {
+        if (ApiPath.SUBTASK.getPath().equals(path)) {
             try {
-                Task task = gson.fromJson(JsonParser.parseString(body).toString(), Task.class);
-                log.info("KanbanController - Creating task: {}", task);
-                service.createTask(task);
+                Subtask subtask = gson.fromJson(JsonParser.parseString(body).toString(), Subtask.class);
+                log.info("KanbanController - Creating subtask: {}", subtask);
+                service.createSubtask(subtask);
             } catch (ValidationException | JsonSyntaxException e) {
                 sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                 return;
@@ -70,16 +44,17 @@ public class TaskHandler extends ApiHandler {
         httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_CREATED, 0);
     }
 
+    @Override
     protected void handleGetMethod() throws IOException {
         String path = httpExchange.getRequestURI().getPath();
         String query = httpExchange.getRequestURI().getQuery();
         String response;
 
-        if (ApiPath.TASK.getPath().equals(path) && query != null && (query.contains("id="))) {
+        if (ApiPath.SUBTASK.getPath().equals(path) && query != null && (query.contains("id="))) {
             try {
                 long id = Integer.parseInt(query.substring("id=".length()));
-                log.info("KanbanController - getting task by id = {}", id);
-                response = gson.toJson(service.getTaskById(id));
+                log.info("KanbanController - getting subtask by id = {}", id);
+                response = gson.toJson(service.getSubtaskById(id));
             } catch (NumberFormatException | ValidationException e) {
                 sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                 return;
@@ -95,17 +70,18 @@ public class TaskHandler extends ApiHandler {
         sendJson(response, HttpURLConnection.HTTP_OK);
     }
 
+    @Override
     protected void handlePutMethod() throws IOException {
         String path = httpExchange.getRequestURI().getPath();
         String body = new String(httpExchange.getRequestBody().readAllBytes(), UTF_8);
         String query = httpExchange.getRequestURI().getQuery();
 
-        if (ApiPath.TASK.getPath().equals(path)) {
+        if (ApiPath.SUBTASK.getPath().equals(path)) {
             try {
-                Task newTask = gson.fromJson(JsonParser.parseString(body).toString(), Task.class);
+                Subtask newSubtask = gson.fromJson(JsonParser.parseString(body).toString(), Subtask.class);
                 long id = Integer.parseInt(query.substring("id=".length()));
-                log.info("KanbanController - updating task: {} / id = {}", newTask, id);
-                service.updateTask(newTask, id);
+                log.info("KanbanController - updating subtask: {} / id = {}", newSubtask, id);
+                service.updateSubtask(newSubtask, id);
             } catch (NumberFormatException | ValidationException | JsonSyntaxException e) {
                 sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                 return;
@@ -121,15 +97,16 @@ public class TaskHandler extends ApiHandler {
         httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     }
 
+    @Override
     protected void handleDeleteMethod() throws IOException {
         String path = httpExchange.getRequestURI().getPath();
         String query = httpExchange.getRequestURI().getQuery();
 
-        if (ApiPath.TASK.getPath().equals(path) && query != null && (query.contains("id="))) {
+        if (ApiPath.SUBTASK.getPath().equals(path) && query != null && (query.contains("id="))) {
             try {
                 long id = Integer.parseInt(query.substring("id=".length()));
-                log.info("KanbanController - deleting task by id = {}", id);
-                service.deleteTaskById(id);
+                log.info("KanbanController - deleting subtask by id = {}", id);
+                service.deleteSubtaskById(id);
             } catch (NumberFormatException | ValidationException e) {
                 sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                 return;

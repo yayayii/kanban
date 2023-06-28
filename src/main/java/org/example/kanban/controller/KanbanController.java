@@ -16,10 +16,15 @@ public class KanbanController {
     public KanbanController(int port) throws IOException {
         this.port = port;
         server = HttpServer.create(new InetSocketAddress(port), 0);
+
         ApiHandler apiHandler = new ApiHandler();
-        TaskHandler tasksHandler = new TaskHandler();
+        TaskHandler taskHandler = new TaskHandler();
+        TaskHandler epictaskHandler = new EpictaskHandler();
+        TaskHandler subtaskHandler = new EpictaskHandler();
         server.createContext(ApiPath.API.getPath(), apiHandler::createContext);
-        server.createContext(ApiPath.TASK.getPath(), tasksHandler::createContextForTasks);
+        server.createContext(ApiPath.TASK.getPath(), taskHandler::createContext);
+        server.createContext(ApiPath.EPICTASK.getPath(), epictaskHandler::createContext);
+        server.createContext(ApiPath.SUBTASK.getPath(), subtaskHandler::createContext);
     }
 
 
