@@ -9,7 +9,7 @@ const Home = () => {
     useEffect(() => {
         setLoading(true);
 
-        fetch('/api/tasks', {
+        fetch('/api', {
             method: 'GET',
             headers: {
                 'Accept': 'application/json'
@@ -32,7 +32,7 @@ const Home = () => {
     }
 
     const removeAll = async () => {
-        await fetch(`/api/tasks`, {
+        await fetch(`/api`, {
             method: 'DELETE'
         }).then(() => {
             setTasks([]);

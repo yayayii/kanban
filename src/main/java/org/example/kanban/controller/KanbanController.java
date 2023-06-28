@@ -16,7 +16,9 @@ public class KanbanController {
     public KanbanController(int port) throws IOException {
         this.port = port;
         server = HttpServer.create(new InetSocketAddress(port), 0);
+        ApiHandler apiHandler = new ApiHandler();
         TaskHandler tasksHandler = new TaskHandler();
+        server.createContext(ApiPath.API.getPath(), apiHandler::createContext);
         server.createContext(ApiPath.TASK.getPath(), tasksHandler::createContextForTasks);
     }
 

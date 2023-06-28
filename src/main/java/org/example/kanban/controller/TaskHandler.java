@@ -31,6 +31,7 @@ public class TaskHandler {
         gson = new Gson();
     }
 
+
     //method handling
     public void createContextForTasks(HttpExchange httpExchange) throws IOException {
         this.httpExchange = httpExchange;
@@ -87,29 +88,18 @@ public class TaskHandler {
         String query = httpExchange.getRequestURI().getQuery();
         String response;
 
-        if (ApiPath.TASK.getPath().equals(path)) {
-            //GET + "?id="
-            if (query != null && (query.contains("id="))) {
-                try {
-                    long id = Integer.parseInt(query.substring("id=".length()));
-                    log.info("KanbanController - getting task by id = {}", id);
-                    response = gson.toJson(service.getTaskById(id));
-                } catch (NumberFormatException | ValidationException e) {
-                    sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-                    return;
-                } catch (Exception e) {
-                    sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
-                    return;
-                }
-                //GET
-            } else {
-                try {
-                    log.info("KanbanController - getting all tasks");
-                    response = gson.toJson(service.getAllTasks());
-                } catch (Exception e) {
-                    sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
-                    return;
-                }
+        //GET + "?id="
+        if (ApiPath.TASK.getPath().equals(path) && query != null && (query.contains("id="))) {
+            try {
+                long id = Integer.parseInt(query.substring("id=".length()));
+                log.info("KanbanController - getting task by id = {}", id);
+                response = gson.toJson(service.getTaskById(id));
+            } catch (NumberFormatException | ValidationException e) {
+                sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+                return;
+            } catch (Exception e) {
+                sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
+                return;
             }
         } else {
             sendError("Wrong path", HttpURLConnection.HTTP_NOT_FOUND);
@@ -150,29 +140,18 @@ public class TaskHandler {
         String path = httpExchange.getRequestURI().getPath();
         String query = httpExchange.getRequestURI().getQuery();
 
-        if (ApiPath.TASK.getPath().equals(path)) {
-            //DELETE + "?id="
-            if (query != null && (query.contains("id="))) {
-                try {
-                    long id = Integer.parseInt(query.substring("id=".length()));
-                    log.info("KanbanController - deleting task by id = {}", id);
-                    service.deleteTaskById(id);
-                } catch (NumberFormatException | ValidationException e) {
-                    sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-                    return;
-                } catch (Exception e) {
-                    sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
-                    return;
-                }
-                //DELETE
-            } else {
-                try {
-                    log.info("KanbanController - deleting all tasks");
-                    service.deleteAllTasks();
-                } catch (Exception e) {
-                    sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
-                    return;
-                }
+        //DELETE + "?id="
+        if (ApiPath.TASK.getPath().equals(path) && query != null && (query.contains("id="))) {
+            try {
+                long id = Integer.parseInt(query.substring("id=".length()));
+                log.info("KanbanController - deleting task by id = {}", id);
+                service.deleteTaskById(id);
+            } catch (NumberFormatException | ValidationException e) {
+                sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+                return;
+            } catch (Exception e) {
+                sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
+                return;
             }
         } else {
             sendError("Wrong path", HttpURLConnection.HTTP_NOT_FOUND);

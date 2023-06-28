@@ -1,7 +1,10 @@
 package org.example.kanban.enum_;
 
 public enum ApiPath {
-    TASK("/api/tasks");
+    API("/api"),
+    TASK("/api/tasks"),
+    SUBTASK("/api/subtasks"),
+    EPICTASK("/api/epictasks");
 
     private final String path;
 
