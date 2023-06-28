@@ -20,7 +20,7 @@ public class KanbanController {
         ApiHandler apiHandler = new ApiHandler();
         TaskHandler taskHandler = new TaskHandler();
         TaskHandler epictaskHandler = new EpictaskHandler();
-        TaskHandler subtaskHandler = new EpictaskHandler();
+        TaskHandler subtaskHandler = new SubtaskHandler();
         server.createContext(ApiPath.API.getPath(), apiHandler::createContext);
         server.createContext(ApiPath.TASK.getPath(), taskHandler::createContext);
         server.createContext(ApiPath.EPICTASK.getPath(), epictaskHandler::createContext);

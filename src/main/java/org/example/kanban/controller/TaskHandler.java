@@ -77,7 +77,7 @@ public class TaskHandler extends ApiHandler {
 
         if (ApiPath.TASK.getPath().equals(path) && query != null && (query.contains("id="))) {
             try {
-                long id = Integer.parseInt(query.substring("id=".length()));
+                long id = Long.parseLong(query.substring("id=".length()));
                 log.info("KanbanController - getting task by id = {}", id);
                 response = gson.toJson(service.getTaskById(id));
             } catch (NumberFormatException | ValidationException e) {
@@ -103,7 +103,7 @@ public class TaskHandler extends ApiHandler {
         if (ApiPath.TASK.getPath().equals(path)) {
             try {
                 Task newTask = gson.fromJson(JsonParser.parseString(body).toString(), Task.class);
-                long id = Integer.parseInt(query.substring("id=".length()));
+                long id = Long.parseLong(query.substring("id=".length()));
                 log.info("KanbanController - updating task: {} / id = {}", newTask, id);
                 service.updateTask(newTask, id);
             } catch (NumberFormatException | ValidationException | JsonSyntaxException e) {
@@ -127,7 +127,7 @@ public class TaskHandler extends ApiHandler {
 
         if (ApiPath.TASK.getPath().equals(path) && query != null && (query.contains("id="))) {
             try {
-                long id = Integer.parseInt(query.substring("id=".length()));
+                long id = Long.parseLong(query.substring("id=".length()));
                 log.info("KanbanController - deleting task by id = {}", id);
                 service.deleteTaskById(id);
             } catch (NumberFormatException | ValidationException e) {

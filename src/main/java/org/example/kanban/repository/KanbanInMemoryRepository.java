@@ -64,7 +64,7 @@ public class KanbanInMemoryRepository implements KanbanRepository {
         subtask.setId(id);
         subtask.setStatus(TaskStatus.NEW.getStatusName());
         subtasks.put(id, subtask);
-        epictasks.get(subtask.getEpictaskId()).getSubtaskIds().add(id);
+        epictasks.get(subtask.getEpictask().getId()).getSubtasks().add(subtask);
         id++;
     }
 
@@ -78,13 +78,14 @@ public class KanbanInMemoryRepository implements KanbanRepository {
         oldSubtask.setName(newSubtask.getName());
         oldSubtask.setDescription(newSubtask.getDescription());
         oldSubtask.setStatus(newSubtask.getStatus());
-        updateEpictaskStatus(oldSubtask.getEpictaskId());
+        updateEpictaskStatus(oldSubtask.getEpictask().getId());
     }
 
     @Override
     public void deleteSubtaskById(long id) {
-        Epictask epictask = epictasks.get(subtasks.get(id).getEpictaskId());
-        epictask.getSubtaskIds().remove(id);
+        Subtask subtask = subtasks.get(id);
+        Epictask epictask = epictasks.get(subtask.getEpictask().getId());
+        epictask.getSubtasks().remove(subtask);
         subtasks.remove(id);
         updateEpictaskStatus(epictask.getId());
     }
@@ -104,6 +105,11 @@ public class KanbanInMemoryRepository implements KanbanRepository {
     }
 
     @Override
+    public Set<Epictask> getAllEpictasks() {
+        return new HashSet<>(epictasks.values());
+    }
+
+    @Override
     public void updateEpictask(Epictask newEpictask, Epictask oldEpictask) {
         oldEpictask.setName(newEpictask.getName());
         oldEpictask.setDescription(newEpictask.getDescription());
@@ -112,8 +118,8 @@ public class KanbanInMemoryRepository implements KanbanRepository {
     @Override
     public void deleteEpictaskById(long id) {
         Epictask epictask = epictasks.get(id);
-        for (Long subtaskId: epictask.getSubtaskIds()) {
-            subtasks.remove(subtaskId);
+        for (Subtask subtask: epictask.getSubtasks()) {
+            subtasks.remove(subtask.getId());
         }
         epictasks.remove(id);
     }
@@ -124,14 +130,14 @@ public class KanbanInMemoryRepository implements KanbanRepository {
         boolean isNew = true;
         boolean isDone = true;
 
-        for (Long subtaskId: epictask.getSubtaskIds()) {
-            if (!subtasks.get(subtaskId).getStatus().equals(TaskStatus.NEW.getStatusName())) {
+        for (Subtask subtask: epictask.getSubtasks()) {
+            if (!subtask.getStatus().equals(TaskStatus.NEW.getStatusName())) {
                 isNew = false;
                 break;
             }
         }
-        for (Long subtaskId: epictask.getSubtaskIds()) {
-            if (!subtasks.get(subtaskId).getStatus().equals(TaskStatus.DONE.getStatusName())) {
+        for (Subtask subtask: epictask.getSubtasks()) {
+            if (!subtask.getStatus().equals(TaskStatus.DONE.getStatusName())) {
                 isDone = false;
                 break;
             }

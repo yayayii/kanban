@@ -22,13 +22,15 @@ public class SubtaskHandler extends TaskHandler {
     @Override
     protected void handlePostMethod() throws IOException {
         String path = httpExchange.getRequestURI().getPath();
+        String query = httpExchange.getRequestURI().getQuery();
         String body = new String(httpExchange.getRequestBody().readAllBytes(), UTF_8);
 
-        if (ApiPath.SUBTASK.getPath().equals(path)) {
+        if (ApiPath.SUBTASK.getPath().equals(path) && query != null && (query.contains("epictaskId="))) {
             try {
                 Subtask subtask = gson.fromJson(JsonParser.parseString(body).toString(), Subtask.class);
-                log.info("KanbanController - Creating subtask: {}", subtask);
-                service.createSubtask(subtask);
+                long epictaskId = Long.parseLong(query.substring("epictaskId=".length()));
+                log.info("KanbanController - Creating subtask: {}, epictaskId: {}", subtask, epictaskId);
+                service.createSubtask(subtask, epictaskId);
             } catch (ValidationException | JsonSyntaxException e) {
                 sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                 return;
@@ -79,7 +81,7 @@ public class SubtaskHandler extends TaskHandler {
         if (ApiPath.SUBTASK.getPath().equals(path)) {
             try {
                 Subtask newSubtask = gson.fromJson(JsonParser.parseString(body).toString(), Subtask.class);
-                long id = Integer.parseInt(query.substring("id=".length()));
+                long id = Long.parseLong(query.substring("id=".length()));
                 log.info("KanbanController - updating subtask: {} / id = {}", newSubtask, id);
                 service.updateSubtask(newSubtask, id);
             } catch (NumberFormatException | ValidationException | JsonSyntaxException e) {
@@ -104,7 +106,7 @@ public class SubtaskHandler extends TaskHandler {
 
         if (ApiPath.SUBTASK.getPath().equals(path) && query != null && (query.contains("id="))) {
             try {
-                long id = Integer.parseInt(query.substring("id=".length()));
+                long id = Long.parseLong(query.substring("id=".length()));
                 log.info("KanbanController - deleting subtask by id = {}", id);
                 service.deleteSubtaskById(id);
             } catch (NumberFormatException | ValidationException e) {

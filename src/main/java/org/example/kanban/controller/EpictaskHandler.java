@@ -52,7 +52,7 @@ public class EpictaskHandler extends TaskHandler {
 
         if (ApiPath.EPICTASK.getPath().equals(path) && query != null && (query.contains("id="))) {
             try {
-                long id = Integer.parseInt(query.substring("id=".length()));
+                long id = Long.parseLong(query.substring("id=".length()));
                 log.info("KanbanController - getting epictask by id = {}", id);
                 response = gson.toJson(service.getEpictaskById(id));
             } catch (NumberFormatException | ValidationException e) {
@@ -79,7 +79,7 @@ public class EpictaskHandler extends TaskHandler {
         if (ApiPath.EPICTASK.getPath().equals(path)) {
             try {
                 Epictask newEpictask = gson.fromJson(JsonParser.parseString(body).toString(), Epictask.class);
-                long id = Integer.parseInt(query.substring("id=".length()));
+                long id = Long.parseLong(query.substring("id=".length()));
                 log.info("KanbanController - updating epictask: {} / id = {}", newEpictask, id);
                 service.updateEpictask(newEpictask, id);
             } catch (NumberFormatException | ValidationException | JsonSyntaxException e) {
@@ -104,7 +104,7 @@ public class EpictaskHandler extends TaskHandler {
 
         if (ApiPath.EPICTASK.getPath().equals(path) && query != null && (query.contains("id="))) {
             try {
-                long id = Integer.parseInt(query.substring("id=".length()));
+                long id = Long.parseLong(query.substring("id=".length()));
                 log.info("KanbanController - deleting epictask by id = {}", id);
                 service.deleteEpictaskById(id);
             } catch (NumberFormatException | ValidationException e) {

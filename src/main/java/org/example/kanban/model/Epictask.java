@@ -10,5 +10,5 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 public class Epictask extends Task {
-    private Set<Long> subtaskIds;
+    private Set<Subtask> subtasks;
 }
