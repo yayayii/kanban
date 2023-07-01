@@ -5,8 +5,8 @@ import com.sun.net.httpserver.HttpExchange;
 import lombok.extern.slf4j.Slf4j;
 import org.example.kanban.enum_.ApiPath;
 import org.example.kanban.exception.ErrorResponse;
-import org.example.kanban.service.KanbanService;
-import org.example.kanban.service.KanbanServiceImpl;
+import org.example.kanban.service.TaskService;
+import org.example.kanban.service.TaskServiceImpl;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -17,12 +17,23 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 public class ApiHandler {
-    private final KanbanService service = new KanbanServiceImpl();
     protected final Gson gson = new Gson();
+    protected final String expectedPath;
+    protected final TaskService service;
     protected HttpExchange httpExchange;
 
 
-    //method handling
+    public ApiHandler() {
+        expectedPath = ApiPath.API.getPath();
+        service = new TaskServiceImpl();
+    }
+
+    public ApiHandler(TaskService service, String expectedPath) {
+        this.expectedPath = expectedPath;
+        this.service = service;
+    }
+
+
     public void createContext(HttpExchange httpExchange) throws IOException {
         this.httpExchange = httpExchange;
         try {
@@ -41,16 +52,15 @@ public class ApiHandler {
         }
     }
 
-    //path handling
-    private void handleGetMethod() throws IOException {
-        String path = httpExchange.getRequestURI().getPath();
+    protected void handleGetMethod() throws IOException {
+        String actualPath = httpExchange.getRequestURI().getPath();
         String response;
 
-        //GET
-        if (ApiPath.API.getPath().equals(path)) {
+        //GET /api : 200 + body
+        if (expectedPath.equals(actualPath)) {
             try {
-                log.info("KanbanController - getting all tasks");
-                response = gson.toJson(service.getAllTasks());
+                log.info("KanbanController - getting all kanban tasks");
+                response = gson.toJson(service.getAllKanbanTasks());
             } catch (Exception e) {
                 sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
                 return;
@@ -63,14 +73,14 @@ public class ApiHandler {
         sendJson(response, HttpURLConnection.HTTP_OK);
     }
 
-    private void handleDeleteMethod() throws IOException {
-        String path = httpExchange.getRequestURI().getPath();
+    protected void handleDeleteMethod() throws IOException {
+        String actualPath = httpExchange.getRequestURI().getPath();
 
-        //DELETE
-        if (ApiPath.API.getPath().equals(path)) {
+        //DELETE /api : 200
+        if (expectedPath.equals(actualPath)) {
             try {
-                log.info("KanbanController - deleting all tasks");
-                service.deleteAllTasks();
+                log.info("KanbanController - deleting all kanban tasks");
+                service.deleteAllKanbanTasks();
             } catch (Exception e) {
                 sendError("Unknown error: " + e.getMessage(), HttpURLConnection.HTTP_SERVER_ERROR);
                 return;

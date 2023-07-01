@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Subtask extends Task {
-    private Epictask epictask;
+    private long epictaskId;
 }

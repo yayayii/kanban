@@ -106,6 +106,37 @@
         "tags": [
           "Tasks"
         ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskResponseDto"
+                  }
+                }
+              }
+            },
+            "description": "All tasks were recieved"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Getting all tasks",
+        "tags": [
+          "Tasks"
+        ]
       }
     },
     "/api/tasks?id=": {
@@ -290,6 +321,37 @@
         "tags": [
           "Subtasks"
         ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubtaskResponseDto"
+                  }
+                }
+              }
+            },
+            "description": "All subtasks were recieved"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Getting all subtasks",
+        "tags": [
+          "Subtasks"
+        ]
       }
     },
     "/api/subtasks?id=": {
@@ -332,59 +394,6 @@
           }
         },
         "summary": "Getting subtask by ID",
-        "tags": [
-          "Subtasks"
-        ]
-      },
-      "put": {
-        "parameters": [
-          {
-            "description": "Subtask ID",
-            "in": "query",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "long"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubtaskUpdateDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Subtask was updated"
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
-            },
-            "description": "Wrong ID/request body"
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
-            },
-            "description": "Unknown error"
-          }
-        },
-        "summary": "Updating subtask",
         "tags": [
           "Subtasks"
         ]
@@ -433,6 +442,71 @@
         ]
       }
     },
+    "/api/subtasks?id=&epictaskId=": {
+      "put": {
+        "parameters": [
+          {
+            "description": "Subtask ID",
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          },
+          {
+            "description": "Epictask ID",
+            "in": "query",
+            "name": "epictaskId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubtaskUpdateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Subtask was updated"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong ID/request body"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Updating subtask",
+        "tags": [
+          "Subtasks"
+        ]
+      }
+    },
     "/api/epictasks": {
       "post": {
         "requestBody": {
@@ -471,6 +545,37 @@
           }
         },
         "summary": "Creating epictask",
+        "tags": [
+          "Epictasks"
+        ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EpictaskResponseDto"
+                  }
+                }
+              }
+            },
+            "description": "All epictasks were recieved"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Getting all epictasks",
         "tags": [
           "Epictasks"
         ]
@@ -798,9 +903,11 @@
             "description": "Subtask status",
             "example": "New"
           },
-          "epictask": {
-            "$ref": "#/components/schemas/EpictaskResponseDto",
-            "description": "Epictask"
+          "epictaskId": {
+            "type": "integer",
+            "description": "Epictask ID",
+            "form": "long",
+            "example": 1
           }
         },
         "description": "Dto for getting a subtask"
