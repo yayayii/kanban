@@ -1,0 +1,2859 @@
+{
+  "info": {
+    "_postman_id": "10e967e1-3591-457c-902b-97d024e8e1c0",
+    "name": "Kanban",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+    "_exporter_id": "26522783"
+  },
+  "item": [
+    {
+      "name": "Task",
+      "item": [
+        {
+          "name": "Create",
+          "item": [
+            {
+              "name": "Add task",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(201);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseUrl}}/api/tasks"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Read",
+          "item": [
+            {
+              "name": "All",
+              "item": [
+                {
+                  "name": "Get tasks without created tasks",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(200);\r",
+                          "});\r",
+                          "pm.test(\"Request has body\", () => {\r",
+                          "    pm.response.to.be.withBody;\r",
+                          "    pm.response.to.be.json;\r",
+                          "});\r",
+                          "pm.test(\"Test response body\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.length, 'length must be 0').to.eql(0);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/api/tasks"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get tasks with created epictasks",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(200);\r",
+                          "});\r",
+                          "pm.test(\"Request has body\", () => {\r",
+                          "    pm.response.to.be.withBody;\r",
+                          "    pm.response.to.be.json;\r",
+                          "});\r",
+                          "pm.test(\"Test response body\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.length, 'length must be 1').to.eql(1);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const rnd = new RandomUtils();\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {\r",
+                          "    pm.sendRequest({\r",
+                          "        method: 'POST',\r",
+                          "        url: pm.collectionVariables.get('baseUrl') + '/api/tasks',\r",
+                          "        header: { \"Content-Type\": \"application/json\" },\r",
+                          "        body: JSON.stringify(rnd.getTask())\r",
+                          "    }, (err, response) => {\r",
+                          "        \r",
+                          "    });\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/api/tasks"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "By id",
+              "item": [
+                {
+                  "name": "Get task by id",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const rnd = new RandomUtils();\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {\r",
+                          "    pm.sendRequest({\r",
+                          "        method: 'POST',\r",
+                          "        url: pm.collectionVariables.get('baseUrl') + '/api/tasks',\r",
+                          "        header: { \"Content-Type\": \"application/json\" },\r",
+                          "        body: JSON.stringify(rnd.getTask())\r",
+                          "    }, (err, response) => {\r",
+                          "        task = response.json();\r",
+                          "        pm.collectionVariables.set(\"taskId\", task.id);\r",
+                          "    });\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(200);\r",
+                          "});\r",
+                          "pm.test(\"Has task create response\", () => {\r",
+                          "    pm.response.to.be.withBody;\r",
+                          "    pm.response.to.be.json;\r",
+                          "});\r",
+                          "pm.test(\"Test task 'id' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('id');\r",
+                          "    pm.expect(jsonData.id, '\"id\" must be \"{{taskId}}\"').to.eql(pm.collectionVariables.get(\"taskId\"));\r",
+                          "});\r",
+                          "pm.test(\"Test task 'name' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('name');\r",
+                          "});\r",
+                          "pm.test(\"Test task 'description' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('description');\r",
+                          "});\r",
+                          "pm.test(\"Test task 'status' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('status');\r",
+                          "    pm.expect(jsonData.status, '\"status\" must be \"New\"').to.eql(\"New\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/tasks?id={{taskId}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "tasks"
+                      ],
+                      "query": [
+                        {
+                          "key": "id",
+                          "value": "{{taskId}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get task by wrong id",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const rnd = new RandomUtils();\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {\r",
+                          "    pm.sendRequest({\r",
+                          "        method: 'POST',\r",
+                          "        url: pm.collectionVariables.get('baseUrl') + '/api/tasks',\r",
+                          "        header: { \"Content-Type\": \"application/json\" },\r",
+                          "        body: JSON.stringify(rnd.getTask())\r",
+                          "    }, (err, response) => {\r",
+                          "        task = response.json();\r",
+                          "        pm.collectionVariables.set(\"taskId\", task.id+1);\r",
+                          "    });\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(400);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/tasks?id={{taskId}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "tasks"
+                      ],
+                      "query": [
+                        {
+                          "key": "id",
+                          "value": "{{taskId}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "item": [
+            {
+              "name": "Update created task",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/tasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getTask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"taskId\", task.id);\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "});\r",
+                      "pm.test(\"Has task update response\", () => {\r",
+                      "    pm.response.to.be.withBody;\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Test updated task 'id' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('id');\r",
+                      "    pm.expect(jsonData.id, '\"id\" must be \"{{taskId}}\"').to.eql(pm.collectionVariables.get(\"taskId\"));\r",
+                      "});\r",
+                      "pm.test(\"Test updated task 'name' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('name');\r",
+                      "    pm.expect(jsonData.name, '\"name\" must be \"new name\"').to.eql(\"new name\");\r",
+                      "});\r",
+                      "pm.test(\"Test updated task 'description' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('description');\r",
+                      "    pm.expect(jsonData.description, '\"description\" must be \"new description\"').to.eql(\"new description\");\r",
+                      "});\r",
+                      "pm.test(\"Test updated task 'status' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('status');\r",
+                      "    pm.expect(jsonData.status, '\"status\" must be \"Done\"').to.eql(\"Done\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"new name\",\r\n    \"description\": \"new description\",\r\n    \"status\": \"Done\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/tasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update wrong task",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/tasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getTask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"taskId\", task.id+1);\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(400);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"new name\",\r\n    \"description\": \"new description\",\r\n    \"status\": \"Done\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/tasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Delete",
+          "item": [
+            {
+              "name": "Delete task by id",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/tasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getTask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"taskId\", task.id);\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/tasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete task by wrong id",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/tasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getTask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"taskId\", task.id+1);\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(400);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/tasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Epictask",
+      "item": [
+        {
+          "name": "Create",
+          "item": [
+            {
+              "name": "Add epictask",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(201);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseUrl}}/api/epictasks"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Read",
+          "item": [
+            {
+              "name": "All",
+              "item": [
+                {
+                  "name": "Get epictasks without created epictasks",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(200);\r",
+                          "});\r",
+                          "pm.test(\"Request has body\", () => {\r",
+                          "    pm.response.to.be.withBody;\r",
+                          "    pm.response.to.be.json;\r",
+                          "});\r",
+                          "pm.test(\"Test response body\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.length, 'length must be 0').to.eql(0);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/api/epictasks"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get epictasks with created epictasks",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(200);\r",
+                          "});\r",
+                          "pm.test(\"Request has body\", () => {\r",
+                          "    pm.response.to.be.withBody;\r",
+                          "    pm.response.to.be.json;\r",
+                          "});\r",
+                          "pm.test(\"Test response body\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.length, 'length must be 1').to.eql(1);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const rnd = new RandomUtils();\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {\r",
+                          "    pm.sendRequest({\r",
+                          "        method: 'POST',\r",
+                          "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                          "        header: { \"Content-Type\": \"application/json\" },\r",
+                          "        body: JSON.stringify(rnd.getEpictask())\r",
+                          "    }, (err, response) => {});\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/api/epictasks"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "By id",
+              "item": [
+                {
+                  "name": "Get epictask by id",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const rnd = new RandomUtils();\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {\r",
+                          "    pm.sendRequest({\r",
+                          "        method: 'POST',\r",
+                          "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                          "        header: { \"Content-Type\": \"application/json\" },\r",
+                          "        body: JSON.stringify(rnd.getEpictask())\r",
+                          "    }, (err, response) => {\r",
+                          "        task = response.json();\r",
+                          "        pm.collectionVariables.set(\"taskId\", task.id);\r",
+                          "    });\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(200);\r",
+                          "});\r",
+                          "pm.test(\"Has epictask create response\", () => {\r",
+                          "    pm.response.to.be.withBody;\r",
+                          "    pm.response.to.be.json;\r",
+                          "});\r",
+                          "pm.test(\"Test epictask 'id' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('id');\r",
+                          "    pm.expect(jsonData.id, '\"id\" must be \"{{taskId}}\"').to.eql(pm.collectionVariables.get(\"taskId\"));\r",
+                          "});\r",
+                          "pm.test(\"Test epictask 'name' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('name');\r",
+                          "});\r",
+                          "pm.test(\"Test epictask 'description' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('description');\r",
+                          "});\r",
+                          "pm.test(\"Test epictask 'status' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('status');\r",
+                          "    pm.expect(jsonData.status, '\"status\" must be \"New\"').to.eql(\"New\");\r",
+                          "});\r",
+                          "pm.test(\"Test epictask 'subtasks' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('subtasks');\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/epictasks?id={{taskId}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "epictasks"
+                      ],
+                      "query": [
+                        {
+                          "key": "id",
+                          "value": "{{taskId}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get epictask by wrong id",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const rnd = new RandomUtils();\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {\r",
+                          "    pm.sendRequest({\r",
+                          "        method: 'POST',\r",
+                          "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                          "        header: { \"Content-Type\": \"application/json\" },\r",
+                          "        body: JSON.stringify(rnd.getEpictask())\r",
+                          "    }, (err, response) => {\r",
+                          "        task = response.json();\r",
+                          "        pm.collectionVariables.set(\"taskId\", task.id+1);\r",
+                          "    });\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(400);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/epictasks?id={{taskId}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "epictasks"
+                      ],
+                      "query": [
+                        {
+                          "key": "id",
+                          "value": "{{taskId}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "item": [
+            {
+              "name": "Update created epictask",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"taskId\", task.id);\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "});\r",
+                      "pm.test(\"Has epictask update response\", () => {\r",
+                      "    pm.response.to.be.withBody;\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Test updated epictask 'id' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('id');\r",
+                      "    pm.expect(jsonData.id, '\"id\" must be \"{{taskId}}\"').to.eql(pm.collectionVariables.get(\"taskId\"));\r",
+                      "});\r",
+                      "pm.test(\"Test updated epictask 'name' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('name');\r",
+                      "    pm.expect(jsonData.name, '\"name\" must be \"new name\"').to.eql(\"new name\");\r",
+                      "});\r",
+                      "pm.test(\"Test updated epictask 'description' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('description');\r",
+                      "    pm.expect(jsonData.description, '\"description\" must be \"new description\"').to.eql(\"new description\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"new name\",\r\n    \"description\": \"new description\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/epictasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "epictasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update wrong epictask",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"taskId\", task.id+1);\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(400);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"new name\",\r\n    \"description\": \"new description\",\r\n    \"status\": \"Done\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/epictasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "epictasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Delete",
+          "item": [
+            {
+              "name": "Delete epictask by id",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"taskId\", task.id);\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/epictasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "epictasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete epictask by wrong id",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"taskId\", task.id+1);\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(400);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/epictasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "epictasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Subtask",
+      "item": [
+        {
+          "name": "Create",
+          "item": [
+            {
+              "name": "Add subtask with wrong epictask id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(400);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseUrl}}/api/subtasks"
+              },
+              "response": []
+            },
+            {
+              "name": "Add subtask",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(201);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getTask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\",\r\n    \"epictaskId\": {{epictaskId}}\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseUrl}}/api/subtasks"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Read",
+          "item": [
+            {
+              "name": "All",
+              "item": [
+                {
+                  "name": "Get subtasks without created subtasks",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(200);\r",
+                          "});\r",
+                          "pm.test(\"Request has body\", () => {\r",
+                          "    pm.response.to.be.withBody;\r",
+                          "    pm.response.to.be.json;\r",
+                          "});\r",
+                          "pm.test(\"Test response body\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.length, 'length must be 0').to.eql(0);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/api/subtasks"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get subtasks with created subtasks",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(200);\r",
+                          "});\r",
+                          "pm.test(\"Request has body\", () => {\r",
+                          "    pm.response.to.be.withBody;\r",
+                          "    pm.response.to.be.json;\r",
+                          "});\r",
+                          "pm.test(\"Test response body\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.length, 'length must be 1').to.eql(1);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const rnd = new RandomUtils();\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {\r",
+                          "    pm.sendRequest({\r",
+                          "        method: 'POST',\r",
+                          "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                          "        header: { \"Content-Type\": \"application/json\" },\r",
+                          "        body: JSON.stringify(rnd.getEpictask())\r",
+                          "    }, (err, response) => {\r",
+                          "        task = response.json();\r",
+                          "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                          "        pm.sendRequest({\r",
+                          "            method: 'POST',\r",
+                          "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                          "            header: { \"Content-Type\": \"application/json\" },\r",
+                          "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                          "        }, (err, response) => {\r",
+                          "            \r",
+                          "        });\r",
+                          "    });\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/api/subtasks"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get subtasks with created subtasks",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(200);\r",
+                          "});\r",
+                          "pm.test(\"Request has body\", () => {\r",
+                          "    pm.response.to.be.withBody;\r",
+                          "    pm.response.to.be.json;\r",
+                          "});\r",
+                          "pm.test(\"Test response body\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.length, 'length must be 1').to.eql(1);\r",
+                          "});\r",
+                          "pm.test(\"Test epictask response body\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData[0].subtasks.length, 'length must be 1').to.eql(1);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const rnd = new RandomUtils();\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {\r",
+                          "    pm.sendRequest({\r",
+                          "        method: 'POST',\r",
+                          "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                          "        header: { \"Content-Type\": \"application/json\" },\r",
+                          "        body: JSON.stringify(rnd.getEpictask())\r",
+                          "    }, (err, response) => {\r",
+                          "        task = response.json();\r",
+                          "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                          "        pm.sendRequest({\r",
+                          "            method: 'POST',\r",
+                          "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                          "            header: { \"Content-Type\": \"application/json\" },\r",
+                          "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                          "        }, (err, response) => {\r",
+                          "            \r",
+                          "        });\r",
+                          "    });\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/api/epictasks"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "By id",
+              "item": [
+                {
+                  "name": "Get subtask by id",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const rnd = new RandomUtils();\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {\r",
+                          "    pm.sendRequest({\r",
+                          "        method: 'POST',\r",
+                          "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                          "        header: { \"Content-Type\": \"application/json\" },\r",
+                          "        body: JSON.stringify(rnd.getEpictask())\r",
+                          "    }, (err, response) => {\r",
+                          "        task = response.json();\r",
+                          "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                          "        pm.sendRequest({\r",
+                          "            method: 'POST',\r",
+                          "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                          "            header: { \"Content-Type\": \"application/json\" },\r",
+                          "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                          "        }, (err, response) => {\r",
+                          "            task = response.json();\r",
+                          "            pm.collectionVariables.set(\"taskId\", task.id);\r",
+                          "        });\r",
+                          "    });\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(200);\r",
+                          "});\r",
+                          "pm.test(\"Has subtask create response\", () => {\r",
+                          "    pm.response.to.be.withBody;\r",
+                          "    pm.response.to.be.json;\r",
+                          "});\r",
+                          "pm.test(\"Test subtask 'id' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('id');\r",
+                          "    pm.expect(jsonData.id, '\"id\" must be \"{{taskId}}\"').to.eql(pm.collectionVariables.get(\"taskId\"));\r",
+                          "});\r",
+                          "pm.test(\"Test subtask 'name' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('name');\r",
+                          "});\r",
+                          "pm.test(\"Test subtask 'description' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('description');\r",
+                          "});\r",
+                          "pm.test(\"Test subtask 'status' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('status');\r",
+                          "    pm.expect(jsonData.status, '\"status\" must be \"New\"').to.eql(\"New\");\r",
+                          "});\r",
+                          "pm.test(\"Test subtask 'epictaskId' field\", () => {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData).to.have.property('epictaskId');\r",
+                          "    pm.expect(jsonData.epictaskId, '\"epictaskId\" must be \"{{epictaskId}}\"').to.eql(pm.collectionVariables.get(\"epictaskId\"));\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/subtasks?id={{taskId}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "subtasks"
+                      ],
+                      "query": [
+                        {
+                          "key": "id",
+                          "value": "{{taskId}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get subtask by wrong id",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const rnd = new RandomUtils();\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "    method: 'DELETE',\r",
+                          "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                          "    header: { \"Content-Type\": \"application/json\" }\r",
+                          "}, (err, response) => {\r",
+                          "    pm.sendRequest({\r",
+                          "        method: 'POST',\r",
+                          "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                          "        header: { \"Content-Type\": \"application/json\" },\r",
+                          "        body: JSON.stringify(rnd.getEpictask())\r",
+                          "    }, (err, response) => {\r",
+                          "        task = response.json();\r",
+                          "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                          "        pm.sendRequest({\r",
+                          "            method: 'POST',\r",
+                          "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                          "            header: { \"Content-Type\": \"application/json\" },\r",
+                          "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                          "        }, (err, response) => {\r",
+                          "            task = response.json();\r",
+                          "            pm.collectionVariables.set(\"taskId\", task.id+1);\r",
+                          "        });\r",
+                          "    });\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", () => {\r",
+                          "    pm.expect(pm.response.code).to.eql(400);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript"
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/subtasks?id={{taskId}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "subtasks"
+                      ],
+                      "query": [
+                        {
+                          "key": "id",
+                          "value": "{{taskId}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "item": [
+            {
+              "name": "Update created subtask",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                      "        pm.sendRequest({\r",
+                      "            method: 'POST',\r",
+                      "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                      "            header: { \"Content-Type\": \"application/json\" },\r",
+                      "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                      "        }, (err, response) => {\r",
+                      "            task = response.json();\r",
+                      "            pm.collectionVariables.set(\"taskId\", task.id);\r",
+                      "        });\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "});\r",
+                      "pm.test(\"Has subtask update response\", () => {\r",
+                      "    pm.response.to.be.withBody;\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Test updated subtask 'id' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('id');\r",
+                      "    pm.expect(jsonData.id, '\"id\" must be \"{{taskId}}\"').to.eql(pm.collectionVariables.get(\"taskId\"));\r",
+                      "});\r",
+                      "pm.test(\"Test updated subtask 'name' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('name');\r",
+                      "    pm.expect(jsonData.name, '\"name\" must be \"new name\"').to.eql(\"new name\");\r",
+                      "});\r",
+                      "pm.test(\"Test updated subtask 'description' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('description');\r",
+                      "    pm.expect(jsonData.description, '\"description\" must be \"new description\"').to.eql(\"new description\");\r",
+                      "});\r",
+                      "pm.test(\"Test updated subtask 'status' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('status');\r",
+                      "    pm.expect(jsonData.status, '\"status\" must be \"Done\"').to.eql(\"Done\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"new name\",\r\n    \"description\": \"new description\",\r\n    \"status\": \"Done\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/subtasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "subtasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update wrong epictask",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                      "        pm.sendRequest({\r",
+                      "            method: 'POST',\r",
+                      "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                      "            header: { \"Content-Type\": \"application/json\" },\r",
+                      "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                      "        }, (err, response) => {\r",
+                      "            task = response.json();\r",
+                      "            pm.collectionVariables.set(\"taskId\", task.id+1);\r",
+                      "        });\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(400);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"new name\",\r\n    \"description\": \"new description\",\r\n    \"status\": \"Done\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/subtasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "subtasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Epictask status update check 1",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                      "        pm.sendRequest({\r",
+                      "            method: 'POST',\r",
+                      "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                      "            header: { \"Content-Type\": \"application/json\" },\r",
+                      "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                      "        }, (err, response) => {\r",
+                      "            task = response.json();\r",
+                      "            pm.collectionVariables.set(\"taskId\", task.id);\r",
+                      "            pm.sendRequest({\r",
+                      "                method: 'PUT',\r",
+                      "                url: pm.collectionVariables.get('baseUrl') + '/api/subtasks?id=' + pm.collectionVariables.get(\"taskId\"),\r",
+                      "                header: { \"Content-Type\": \"application/json\" },\r",
+                      "                body: JSON.stringify({\r",
+                      "                    \"name\": \"name\",\r",
+                      "                    \"description\": \"description\",\r",
+                      "                    \"status\": \"Done\"\r",
+                      "                })\r",
+                      "            }, (err, response) => {});\r",
+                      "        });\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "});\r",
+                      "pm.test(\"Has epictask update response\", () => {\r",
+                      "    pm.response.to.be.withBody;\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Test updated epictask 'status' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('status');\r",
+                      "    pm.expect(jsonData.status, '\"status\" must be \"Done\"').to.eql(\"Done\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/epictasks?id={{epictaskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "epictasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{epictaskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Epictask status update check 2",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                      "        pm.sendRequest({\r",
+                      "            method: 'POST',\r",
+                      "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                      "            header: { \"Content-Type\": \"application/json\" },\r",
+                      "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                      "        }, (err, response) => {\r",
+                      "            task = response.json();\r",
+                      "            pm.collectionVariables.set(\"taskId\", task.id);\r",
+                      "            pm.sendRequest({\r",
+                      "                method: 'PUT',\r",
+                      "                url: pm.collectionVariables.get('baseUrl') + '/api/subtasks?id=' + pm.collectionVariables.get(\"taskId\"),\r",
+                      "                header: { \"Content-Type\": \"application/json\" },\r",
+                      "                body: JSON.stringify({\r",
+                      "                    \"name\": \"name\",\r",
+                      "                    \"description\": \"description\",\r",
+                      "                    \"status\": \"In progress\"\r",
+                      "                })\r",
+                      "            }, (err, response) => {});\r",
+                      "        });\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "});\r",
+                      "pm.test(\"Has epictask update response\", () => {\r",
+                      "    pm.response.to.be.withBody;\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Test updated epictask 'status' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('status');\r",
+                      "    pm.expect(jsonData.status, '\"status\" must be \"In progress\"').to.eql(\"In progress\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/epictasks?id={{epictaskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "epictasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{epictaskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Epictask status update check 3",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                      "        pm.sendRequest({\r",
+                      "            method: 'POST',\r",
+                      "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                      "            header: { \"Content-Type\": \"application/json\" },\r",
+                      "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                      "        }, (err, response) => {\r",
+                      "            task = response.json();\r",
+                      "            pm.collectionVariables.set(\"taskId\", task.id);\r",
+                      "            pm.sendRequest({\r",
+                      "                method: 'PUT',\r",
+                      "                url: pm.collectionVariables.get('baseUrl') + '/api/subtasks?id=' + pm.collectionVariables.get(\"taskId\"),\r",
+                      "                header: { \"Content-Type\": \"application/json\" },\r",
+                      "                body: JSON.stringify({\r",
+                      "                    \"name\": \"name\",\r",
+                      "                    \"description\": \"description\",\r",
+                      "                    \"status\": \"In progress\"\r",
+                      "                })\r",
+                      "            }, (err, response) => {\r",
+                      "                pm.sendRequest({\r",
+                      "                    method: 'PUT',\r",
+                      "                    url: pm.collectionVariables.get('baseUrl') + '/api/subtasks?id=' + pm.collectionVariables.get(\"taskId\"),\r",
+                      "                    header: { \"Content-Type\": \"application/json\" },\r",
+                      "                    body: JSON.stringify({\r",
+                      "                        \"name\": \"name\",\r",
+                      "                        \"description\": \"description\",\r",
+                      "                        \"status\": \"New\"\r",
+                      "                    })\r",
+                      "                }, (err, response) => {});\r",
+                      "            });\r",
+                      "        });\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "});\r",
+                      "pm.test(\"Has epictask update response\", () => {\r",
+                      "    pm.response.to.be.withBody;\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Test updated epictask 'status' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('status');\r",
+                      "    pm.expect(jsonData.status, '\"status\" must be \"New\"').to.eql(\"New\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/epictasks?id={{epictaskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "epictasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{epictaskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Epictask status update check 4",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                      "        pm.sendRequest({\r",
+                      "            method: 'POST',\r",
+                      "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                      "            header: { \"Content-Type\": \"application/json\" },\r",
+                      "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                      "        }, (err, response) => {\r",
+                      "            pm.sendRequest({\r",
+                      "                method: 'POST',\r",
+                      "                url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                      "                header: { \"Content-Type\": \"application/json\" },\r",
+                      "                body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                      "            }, (err, response) => {\r",
+                      "                task = response.json();\r",
+                      "                pm.collectionVariables.set(\"taskId\", task.id);\r",
+                      "                pm.sendRequest({\r",
+                      "                    method: 'PUT',\r",
+                      "                    url: pm.collectionVariables.get('baseUrl') + '/api/subtasks?id=' + pm.collectionVariables.get(\"taskId\"),\r",
+                      "                    header: { \"Content-Type\": \"application/json\" },\r",
+                      "                    body: JSON.stringify({\r",
+                      "                        \"name\": \"name\",\r",
+                      "                        \"description\": \"description\",\r",
+                      "                        \"status\": \"Done\"\r",
+                      "                    })\r",
+                      "                }, (err, response) => {});\r",
+                      "            });\r",
+                      "        });\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "});\r",
+                      "pm.test(\"Has epictask update response\", () => {\r",
+                      "    pm.response.to.be.withBody;\r",
+                      "    pm.response.to.be.json;\r",
+                      "});\r",
+                      "pm.test(\"Test updated epictask 'status' field\", () => {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData).to.have.property('status');\r",
+                      "    pm.expect(jsonData.status, '\"status\" must be \"In progress\"').to.eql(\"In progress\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/epictasks?id={{epictaskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "epictasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{epictaskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Delete",
+          "item": [
+            {
+              "name": "Delete subtsak by id",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                      "        pm.sendRequest({\r",
+                      "            method: 'POST',\r",
+                      "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                      "            header: { \"Content-Type\": \"application/json\" },\r",
+                      "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                      "        }, (err, response) => {\r",
+                      "            task = response.json();\r",
+                      "            pm.collectionVariables.set(\"taskId\", task.id);\r",
+                      "        });\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/subtasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "subtasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete subtask by wrong id",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const rnd = new RandomUtils();\r",
+                      "\r",
+                      "pm.sendRequest({\r",
+                      "    method: 'DELETE',\r",
+                      "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                      "    header: { \"Content-Type\": \"application/json\" }\r",
+                      "}, (err, response) => {\r",
+                      "    pm.sendRequest({\r",
+                      "        method: 'POST',\r",
+                      "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                      "        header: { \"Content-Type\": \"application/json\" },\r",
+                      "        body: JSON.stringify(rnd.getEpictask())\r",
+                      "    }, (err, response) => {\r",
+                      "        task = response.json();\r",
+                      "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                      "        pm.sendRequest({\r",
+                      "            method: 'POST',\r",
+                      "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                      "            header: { \"Content-Type\": \"application/json\" },\r",
+                      "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                      "        }, (err, response) => {\r",
+                      "            task = response.json();\r",
+                      "            pm.collectionVariables.set(\"taskId\", task.id+1);\r",
+                      "        });\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(400);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/subtasks?id={{taskId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "subtasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{taskId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Task validation",
+      "item": [
+        {
+          "name": "Add task with empty name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": null,\r\n    \"description\": \"description\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/tasks"
+          },
+          "response": []
+        },
+        {
+          "name": "Add task with empty description",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/tasks"
+          },
+          "response": []
+        },
+        {
+          "name": "Add task with long name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"12345678901234567890123456\",\r\n    \"description\": \"description\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/tasks"
+          },
+          "response": []
+        },
+        {
+          "name": "Add task with long description",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/tasks"
+          },
+          "response": []
+        },
+        {
+          "name": "Add task with wrong status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\",\r\n    \"status\": \"status\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/tasks"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "All tasks",
+      "item": [
+        {
+          "name": "get all tasks without created tasks",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const rnd = new RandomUtils();\r",
+                  "\r",
+                  "pm.sendRequest({\r",
+                  "    method: 'DELETE',\r",
+                  "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                  "    header: { \"Content-Type\": \"application/json\" }\r",
+                  "}, (err, response) => {});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.expect(pm.response.code).to.eql(200);\r",
+                  "});\r",
+                  "pm.test(\"Request has body\", () => {\r",
+                  "    pm.response.to.be.withBody;\r",
+                  "    pm.response.to.be.json;\r",
+                  "});\r",
+                  "pm.test(\"Test response body\", () => {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.length, 'length must be 0').to.eql(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api"
+          },
+          "response": []
+        },
+        {
+          "name": "get all tasks with created tasks",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const rnd = new RandomUtils();\r",
+                  "\r",
+                  "pm.sendRequest({\r",
+                  "    method: 'DELETE',\r",
+                  "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                  "    header: { \"Content-Type\": \"application/json\" }\r",
+                  "}, (err, response) => {\r",
+                  "    pm.sendRequest({\r",
+                  "        method: 'POST',\r",
+                  "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                  "        header: { \"Content-Type\": \"application/json\" },\r",
+                  "        body: JSON.stringify(rnd.getEpictask())\r",
+                  "    }, (err, response) => {\r",
+                  "        task = response.json();\r",
+                  "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                  "        pm.sendRequest({\r",
+                  "            method: 'POST',\r",
+                  "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                  "            header: { \"Content-Type\": \"application/json\" },\r",
+                  "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                  "        }, (err, response) => {\r",
+                  "            pm.sendRequest({\r",
+                  "                method: 'POST',\r",
+                  "                url: pm.collectionVariables.get('baseUrl') + '/api/tasks',\r",
+                  "                header: { \"Content-Type\": \"application/json\" },\r",
+                  "                body: JSON.stringify(rnd.getTask())\r",
+                  "            }, (err, response) => {});\r",
+                  "        });\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.expect(pm.response.code).to.eql(200);\r",
+                  "});\r",
+                  "pm.test(\"Request has body\", () => {\r",
+                  "    pm.response.to.be.withBody;\r",
+                  "    pm.response.to.be.json;\r",
+                  "});\r",
+                  "pm.test(\"Test response body\", () => {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.length, 'length must be 3').to.eql(3);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api"
+          },
+          "response": []
+        },
+        {
+          "name": "get all tasks with created tasks Copy",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const rnd = new RandomUtils();\r",
+                  "\r",
+                  "pm.sendRequest({\r",
+                  "    method: 'DELETE',\r",
+                  "    url: pm.collectionVariables.get('baseUrl') + '/api',\r",
+                  "    header: { \"Content-Type\": \"application/json\" }\r",
+                  "}, (err, response) => {\r",
+                  "    pm.sendRequest({\r",
+                  "        method: 'POST',\r",
+                  "        url: pm.collectionVariables.get('baseUrl') + '/api/epictasks',\r",
+                  "        header: { \"Content-Type\": \"application/json\" },\r",
+                  "        body: JSON.stringify(rnd.getEpictask())\r",
+                  "    }, (err, response) => {\r",
+                  "        task = response.json();\r",
+                  "        pm.collectionVariables.set(\"epictaskId\", task.id);\r",
+                  "        pm.sendRequest({\r",
+                  "            method: 'POST',\r",
+                  "            url: pm.collectionVariables.get('baseUrl') + '/api/subtasks',\r",
+                  "            header: { \"Content-Type\": \"application/json\" },\r",
+                  "            body: JSON.stringify(rnd.getSubtask(pm.collectionVariables.get(\"epictaskId\")))\r",
+                  "        }, (err, response) => {\r",
+                  "            pm.sendRequest({\r",
+                  "                method: 'POST',\r",
+                  "                url: pm.collectionVariables.get('baseUrl') + '/api/tasks',\r",
+                  "                header: { \"Content-Type\": \"application/json\" },\r",
+                  "                body: JSON.stringify(rnd.getTask())\r",
+                  "            }, (err, response) => {});\r",
+                  "        });\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.expect(pm.response.code).to.eql(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "RandomUtils = class {",
+          "    constructor() {}",
+          "",
+          "    getTask() {",
+          "        return {",
+          "            name: pm.variables.replaceIn('{{$randomFullName}}'),",
+          "            description: pm.variables.replaceIn('{{$randomLoremSentence}}')",
+          "        };",
+          "    }",
+          "",
+          "    getEpictask() {",
+          "        return {",
+          "            name: pm.variables.replaceIn('{{$randomFullName}}'),",
+          "            description: pm.variables.replaceIn('{{$randomLoremSentence}}')",
+          "        };",
+          "    }",
+          "",
+          "    getSubtask(id) {",
+          "        return {",
+          "            name: pm.variables.replaceIn('{{$randomFullName}}'),",
+          "            description: pm.variables.replaceIn('{{$randomLoremSentence}}'),",
+          "            epictaskId: id",
+          "        };",
+          "    }",
+          "};"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "taskId",
+      "value": "0",
+      "type": "string"
+    },
+    {
+      "key": "epictaskId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
