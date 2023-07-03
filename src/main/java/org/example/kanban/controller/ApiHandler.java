@@ -1,6 +1,7 @@
 package org.example.kanban.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import lombok.extern.slf4j.Slf4j;
 import org.example.kanban.enum_.ApiPath;
@@ -17,7 +18,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 public class ApiHandler {
-    protected final Gson gson = new Gson();
+    protected final Gson gson = new GsonBuilder().serializeNulls().create();
     protected final String expectedPath;
     protected final TaskService service;
     protected HttpExchange httpExchange;

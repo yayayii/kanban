@@ -20,12 +20,13 @@ public class SubtaskServiceImpl extends TaskServiceImpl {
 
 
     @Override
-    public void createTask(Task subtask) {
+    public Task createTask(Task subtask) {
         validateTask(subtask);
         epictaskRepository.getTaskById(((Subtask) subtask).getEpictaskId())
                 .orElseThrow(() -> new ValidationException("Wrong epictask id"));
         kanbanRepository.createTask(subtask);
 
-        log.info("Subtask was created");
+        log.info("Task {} was created", subtask);
+        return subtask;
     }
 }

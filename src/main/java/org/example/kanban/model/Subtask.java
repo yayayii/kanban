@@ -1,11 +1,11 @@
 package org.example.kanban.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 public class Subtask extends Task {
     private long epictaskId;

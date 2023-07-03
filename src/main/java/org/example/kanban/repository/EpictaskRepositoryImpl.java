@@ -11,11 +11,13 @@ import java.util.Set;
 
 public class EpictaskRepositoryImpl extends KanbanRepository {
     @Override
-    public void createTask(Task epictask) {
+    public Task createTask(Task epictask) {
         epictask.setId(id);
         epictask.setStatus(TaskStatus.NEW.getStatusName());
         epictasks.put(id, (Epictask) epictask);
         id++;
+
+        return epictask;
     }
 
     @Override
@@ -37,7 +39,8 @@ public class EpictaskRepositoryImpl extends KanbanRepository {
     @Override
     public void deleteTaskById(long id) {
         Epictask epictask = epictasks.get(id);
-        for (Subtask subtask: epictask.getSubtasks()) {
+        Set<Subtask> epicSubtasks = epictask.getSubtasks();
+        for (Subtask subtask: epicSubtasks) {
             subtasks.remove(subtask.getId());
         }
         epictasks.remove(id);

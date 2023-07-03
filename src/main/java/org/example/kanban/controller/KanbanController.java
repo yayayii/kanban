@@ -3,6 +3,10 @@ package org.example.kanban.controller;
 import com.sun.net.httpserver.HttpServer;
 import lombok.extern.slf4j.Slf4j;
 import org.example.kanban.enum_.ApiPath;
+import org.example.kanban.model.Epictask;
+import org.example.kanban.model.Subtask;
+import org.example.kanban.service.EpictaskServiceImpl;
+import org.example.kanban.service.SubtaskServiceImpl;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -18,9 +22,13 @@ public class KanbanController {
         server = HttpServer.create(new InetSocketAddress(port), 0);
 
         ApiHandler apiHandler = new ApiHandler();
-        TaskHandler taskHandler = new TaskHandler();
-        TaskHandler epictaskHandler = new EpictaskHandler();
-        TaskHandler subtaskHandler = new SubtaskHandler();
+        ApiHandler taskHandler = new TaskHandler();
+        ApiHandler epictaskHandler = new TaskHandler(
+                new EpictaskServiceImpl(), ApiPath.EPICTASK.getPath(), Epictask.class
+        );
+        ApiHandler subtaskHandler = new TaskHandler(
+                new SubtaskServiceImpl(), ApiPath.SUBTASK.getPath(), Subtask.class
+        );
         server.createContext(ApiPath.API.getPath(), apiHandler::createContext);
         server.createContext(ApiPath.TASK.getPath(), taskHandler::createContext);
         server.createContext(ApiPath.EPICTASK.getPath(), epictaskHandler::createContext);

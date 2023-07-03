@@ -59,13 +59,14 @@ public class TaskHandler extends ApiHandler {
     protected void handlePostMethod() throws IOException {
         String actualPath = httpExchange.getRequestURI().getPath();
         String body = new String(httpExchange.getRequestBody().readAllBytes(), UTF_8);
+        String response;
 
         //POST /api/tasks(subtasks/epictasks) + body : 201
         if (expectedPath.equals(actualPath)) {
             try {
                 Task task = gson.fromJson(JsonParser.parseString(body).toString(), taskType);
                 log.info("KanbanController - Creating task: {}", task);
-                service.createTask(task);
+                response = gson.toJson(service.createTask(task));
             } catch (ValidationException | JsonSyntaxException e) {
                 sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                 return;
@@ -78,7 +79,7 @@ public class TaskHandler extends ApiHandler {
             return;
         }
 
-        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_CREATED, 0);
+        sendJson(response, HttpURLConnection.HTTP_CREATED);
     }
 
     @Override
@@ -102,7 +103,7 @@ public class TaskHandler extends ApiHandler {
                 try {
                     long id = Long.parseLong(query.substring("id=".length()));
                     log.info("KanbanController - getting task by id = {}", id);
-                    response = gson.toJson(service.getTaskById(id));
+                    response = gson.toJson(service.getTaskById(id), taskType);
                 } catch (NumberFormatException | ValidationException e) {
                     sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                     return;
@@ -126,6 +127,7 @@ public class TaskHandler extends ApiHandler {
         String path = httpExchange.getRequestURI().getPath();
         String body = new String(httpExchange.getRequestBody().readAllBytes(), UTF_8);
         String query = httpExchange.getRequestURI().getQuery();
+        String response;
 
         //PUT /api/tasks?id= + body : 200
         if (expectedPath.equals(path) && query != null && (query.contains("id="))) {
@@ -133,7 +135,7 @@ public class TaskHandler extends ApiHandler {
                 Task newTask = gson.fromJson(JsonParser.parseString(body).toString(), taskType);
                 long id = Long.parseLong(query.substring("id=".length()));
                 log.info("KanbanController - updating task: {} / id = {}", newTask, id);
-                service.updateTask(newTask, id);
+                response = gson.toJson(service.updateTask(newTask, id));
             } catch (NumberFormatException | ValidationException | JsonSyntaxException e) {
                 sendError("Wrong request: " + e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
                 return;
@@ -146,7 +148,7 @@ public class TaskHandler extends ApiHandler {
             return;
         }
 
-        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        sendJson(response, HttpURLConnection.HTTP_OK);
     }
 
     @Override

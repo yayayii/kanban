@@ -7,11 +7,13 @@ import java.util.*;
 
 public class TaskRepositoryImpl extends KanbanRepository {
     @Override
-    public void createTask(Task task) {
+    public Task createTask(Task task) {
         task.setId(id);
         task.setStatus(TaskStatus.NEW.getStatusName());
         tasks.put(id, task);
         id++;
+
+        return task;
     }
 
     @Override

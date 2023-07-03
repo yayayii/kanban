@@ -14,7 +14,7 @@ public abstract class KanbanRepository {
     protected long id = 1;
 
 
-    public abstract void createTask(Task task);
+    public abstract Task createTask(Task task);
     public abstract Optional<Task> getTaskById(long id);
     public abstract Set<Task> getAllTasks();
     public abstract void updateTask(Task newTask, Task oldTask);
@@ -42,13 +42,14 @@ public abstract class KanbanRepository {
         boolean isNew = true;
         boolean isDone = true;
 
-        for (Subtask subtask: epictask.getSubtasks()) {
+        Set<Subtask> epicSubtasks = epictask.getSubtasks();
+        for (Subtask subtask: epicSubtasks) {
             if (!subtask.getStatus().equals(TaskStatus.NEW.getStatusName())) {
                 isNew = false;
                 break;
             }
         }
-        for (Subtask subtask: epictask.getSubtasks()) {
+        for (Subtask subtask: epicSubtasks) {
             if (!subtask.getStatus().equals(TaskStatus.DONE.getStatusName())) {
                 isDone = false;
                 break;
