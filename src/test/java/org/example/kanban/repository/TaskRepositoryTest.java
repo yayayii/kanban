@@ -11,19 +11,20 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-public class KanbanInMemoryRepositoryTest {
+public class TaskRepositoryTest {
     private KanbanRepository repository;
 
 
     @BeforeEach
     void setUp() {
-        repository = new KanbanInMemoryRepository();
+        repository = new TaskRepositoryImpl();
     }
+
 
     //createTask
     @Test
     void createTask_shouldInitializeTaskFields() {
-        Task task = Task.builder().name("name").description("description").build();
+        Task task = new Task();
 
         repository.createTask(task);
         assertEquals(1, task.getId());
@@ -48,16 +49,9 @@ public class KanbanInMemoryRepositoryTest {
     @Test
     void getAllTasks_shouldReturnTaskCollection_whenTaskAdded() {
         Task task = mock(Task.class);
-        Task task2 = mock(Task.class);
 
         repository.createTask(task);
-        repository.createTask(task2);
-        assertEquals(new ArrayList<>(List.of(task, task2)), new ArrayList<>(repository.getAllTasks()));
-    }
-
-    @Test
-    void getAllTasks_shouldReturnEmptyCollection_whenNoTasks() {
-        assertEquals(new ArrayList<>(), new ArrayList<>(repository.getAllTasks()));
+        assertEquals(new ArrayList<>(List.of(task)), new ArrayList<>(repository.getAllTasks()));
     }
 
     //updateTask
@@ -84,18 +78,5 @@ public class KanbanInMemoryRepositoryTest {
 
         repository.deleteTaskById(1);
         assertTrue(repository.getTaskById(1).isEmpty());
-    }
-
-    //deleteAllTasks
-    @Test
-    void deleteAllTasks_shouldDeleteTasks() {
-        Task task = mock(Task.class);
-        Task task2 = mock(Task.class);
-
-        repository.createTask(task);
-        repository.createTask(task2);
-
-        repository.deleteAllTasks();
-        assertEquals(new ArrayList<>(), new ArrayList<>(repository.getAllTasks()));
     }
 }

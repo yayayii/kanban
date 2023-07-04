@@ -11,7 +11,7 @@ public abstract class KanbanRepository {
     protected static final Map<Long, Task> tasks = new HashMap<>();
     protected static final Map<Long, Epictask> epictasks = new HashMap<>();
     protected static final Map<Long, Subtask> subtasks = new HashMap<>();
-    protected long id = 1;
+    protected static long id = 1;
 
 
     public abstract Task createTask(Task task);

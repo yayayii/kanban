@@ -37,11 +37,4 @@ public class TaskRepositoryImpl extends KanbanRepository {
     public void deleteTaskById(long id) {
         tasks.remove(id);
     }
-
-    @Override
-    public void deleteAllKanbanTasks() {
-        tasks.clear();
-        epictasks.clear();
-        subtasks.clear();
-    }
 }
