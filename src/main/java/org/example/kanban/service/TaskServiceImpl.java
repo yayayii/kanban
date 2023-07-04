@@ -1,5 +1,6 @@
 package org.example.kanban.service;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.kanban.enum_.TaskStatus;
 import org.example.kanban.exception.ValidationException;
@@ -9,6 +10,7 @@ import org.example.kanban.repository.TaskRepositoryImpl;
 
 import java.util.Set;
 
+@AllArgsConstructor
 @Slf4j
 public class TaskServiceImpl implements TaskService {
     protected final KanbanRepository kanbanRepository;
@@ -18,9 +20,6 @@ public class TaskServiceImpl implements TaskService {
         kanbanRepository = new TaskRepositoryImpl();
     }
 
-    public TaskServiceImpl(KanbanRepository kanbanRepository) {
-        this.kanbanRepository = kanbanRepository;
-    }
 
     @Override
     public Task createTask(Task task) {

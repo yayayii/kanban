@@ -3,7 +3,7 @@ package org.example.kanban.repository;
 import org.example.kanban.enum_.TaskStatus;
 import org.example.kanban.model.Epictask;
 import org.example.kanban.model.Subtask;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,14 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 public class EpictaskRepositoryTest {
-    private KanbanRepository epictaskRepository;
-    private KanbanRepository subtaskRepository;
+    private KanbanRepository epictaskRepository = new EpictaskRepositoryImpl();
+    private KanbanRepository subtaskRepository = new SubtaskRepositoryImpl();
 
 
-    @BeforeEach
-    void setUp() {
-        epictaskRepository = new EpictaskRepositoryImpl();
-        subtaskRepository = new SubtaskRepositoryImpl();
+    @AfterEach
+    void tearDown() {
+        epictaskRepository.deleteAllKanbanTasks();
     }
 
 
@@ -30,22 +29,22 @@ public class EpictaskRepositoryTest {
         Epictask epictask = new Epictask();
 
         epictaskRepository.createTask(epictask);
-        assertEquals(1, epictask.getId());
+        assertNotEquals(0, epictask.getId());
         assertEquals(TaskStatus.NEW.getStatusName(), epictask.getStatus());
     }
 
     //getTaskById
     @Test
     void getEpictaskById_shouldReturnTask_whenExists() {
-        Epictask epictask = mock(Epictask.class);
+        Epictask epictask = new Epictask();
 
         epictaskRepository.createTask(epictask);
-        assertEquals(epictask, epictaskRepository.getTaskById(1).get());
+        assertEquals(epictask, epictaskRepository.getTaskById(epictask.getId()).get());
     }
 
     @Test
     void getEpictaskById_shouldReturnEmptyOptional_whenNotExists() {
-        assertTrue(epictaskRepository.getTaskById(1).isEmpty());
+        assertTrue(epictaskRepository.getTaskById(0).isEmpty());
     }
 
     //getAllTasks
@@ -54,7 +53,7 @@ public class EpictaskRepositoryTest {
         Epictask epictask = mock(Epictask.class);
 
         epictaskRepository.createTask(epictask);
-        assertEquals(new ArrayList<>(List.of(epictask)), new ArrayList<>(epictaskRepository.getAllTasks()));
+        assertTrue(epictaskRepository.getAllTasks().contains(epictask));
     }
 
     //updateTask
@@ -73,14 +72,13 @@ public class EpictaskRepositoryTest {
     //deleteTaskById
     @Test
     void deleteEpictaskById_shouldDeleteEpictaskAndSubtasks() {
-        Epictask epictask = mock(Epictask.class);
-        Subtask subtask = Subtask.subtaskBuilder().epictaskId(1).build();
-
+        Epictask epictask = new Epictask();
         epictaskRepository.createTask(epictask);
+        Subtask subtask = Subtask.subtaskBuilder().epictaskId(epictask.getId()).build();
         subtaskRepository.createTask(subtask);
 
-        epictaskRepository.deleteTaskById(1);
-        assertTrue(epictaskRepository.getTaskById(1).isEmpty());
-        assertTrue(subtaskRepository.getTaskById(2).isEmpty());
+        epictaskRepository.deleteTaskById(epictask.getId());
+        assertTrue(epictaskRepository.getTaskById(epictask.getId()).isEmpty());
+        assertTrue(subtaskRepository.getTaskById(subtask.getId()).isEmpty());
     }
 }

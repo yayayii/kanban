@@ -18,6 +18,10 @@ public class SubtaskServiceImpl extends TaskServiceImpl {
         epictaskRepository = new EpictaskRepositoryImpl();
     }
 
+    public SubtaskServiceImpl(KanbanRepository kanbanRepository, KanbanRepository epictaskRepository) {
+        super(kanbanRepository);
+        this.epictaskRepository = epictaskRepository;
+    }
 
     @Override
     public Task createTask(Task subtask) {
