@@ -14,8 +14,12 @@ const App = () => {
             <Routes>
                 <Route path='/' exact={true} element={<Home/>}/>
                 <Route path='/create' exact={true} element={<TaskCreate/>}/>
-                <Route path='/view/:id' element={<TaskView/>}/>
-                <Route path='/edit/:id' element={<TaskEdit/>}/>
+                <Route path='/view/tasks/:id' element={<TaskView/>}/>
+                <Route path='/view/epictasks/:id' element={<TaskView/>}/>
+                <Route path='/view/subtasks/:id' element={<TaskView/>}/>
+                <Route path='/edit/tasks/:id' element={<TaskEdit/>}/>
+                <Route path='/edit/epictasks/:id' element={<TaskEdit/>}/>
+                <Route path='/edit/subtasks/:id' element={<TaskEdit/>}/>
             </Routes>
         </Router>
     )

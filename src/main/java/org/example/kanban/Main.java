@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        KanbanController controller = new KanbanController();
+        KanbanController controller = new KanbanController(8080);
         controller.start();
     }
 }

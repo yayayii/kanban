@@ -14,4 +14,13 @@ public enum TaskStatus {
     public String getStatusName() {
         return statusName;
     }
+
+    public static boolean isValid(String status) {
+        for (TaskStatus taskStatus: TaskStatus.values()) {
+            if (taskStatus.getStatusName().equals(status)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

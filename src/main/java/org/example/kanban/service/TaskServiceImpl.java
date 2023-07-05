@@ -1,33 +1,33 @@
 package org.example.kanban.service;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.kanban.enum_.TaskStatus;
 import org.example.kanban.exception.ValidationException;
 import org.example.kanban.model.Task;
-import org.example.kanban.repository.KanbanInMemoryRepository;
 import org.example.kanban.repository.KanbanRepository;
+import org.example.kanban.repository.TaskRepositoryImpl;
 
-import java.util.Collection;
+import java.util.Set;
 
+@AllArgsConstructor
 @Slf4j
-public class KanbanServiceImpl implements KanbanService {
-    private final KanbanRepository kanbanRepository;
+public class TaskServiceImpl implements TaskService {
+    protected final KanbanRepository kanbanRepository;
 
 
-    public KanbanServiceImpl() {
-        kanbanRepository = new KanbanInMemoryRepository();
-    }
-
-    public KanbanServiceImpl(KanbanRepository kanbanRepository) {
-        this.kanbanRepository = kanbanRepository;
+    public TaskServiceImpl() {
+        kanbanRepository = new TaskRepositoryImpl();
     }
 
 
     @Override
-    public void createTask(Task task) {
+    public Task createTask(Task task) {
         validateTask(task);
         kanbanRepository.createTask(task);
 
-        log.info("Task was created");
+        log.info("Task {} was created", task);
+        return task;
     }
 
     @Override
@@ -39,20 +39,29 @@ public class KanbanServiceImpl implements KanbanService {
     }
 
     @Override
-    public Collection<Task> getAllTasks() {
-        Collection<Task> tasks = kanbanRepository.getAllTasks();
+    public Set<Task> getAllTasks() {
+        Set<Task> tasks = kanbanRepository.getAllTasks();
 
-        log.info("Sending tasks: {}", tasks);
+        log.info("Sending all tasks: {}", tasks);
         return tasks;
     }
 
     @Override
-    public void updateTask(Task newTask, long id) {
+    public Set<Task> getAllKanbanTasks() {
+        Set<Task> kanbanTasks = kanbanRepository.getAllKanbanTasks();
+
+        log.info("Sending all kanban tasks: {}", kanbanTasks);
+        return kanbanTasks;
+    }
+
+    @Override
+    public Task updateTask(Task newTask, long id) {
         validateTask(newTask);
         Task oldTask = kanbanRepository.getTaskById(id).orElseThrow(() -> new ValidationException("Wrong task id"));
         kanbanRepository.updateTask(newTask, oldTask);
 
-        log.info("Task was updated");
+        log.info("Task {} was updated", oldTask);
+        return oldTask;
     }
 
     @Override
@@ -64,13 +73,13 @@ public class KanbanServiceImpl implements KanbanService {
     }
 
     @Override
-    public void deleteAllTasks() {
-        kanbanRepository.deleteAllTasks();
+    public void deleteAllKanbanTasks() {
+        kanbanRepository.deleteAllKanbanTasks();
 
-        log.info("All tasks were deleted");
+        log.info("All kanban tasks were deleted");
     }
 
-    private void validateTask(Task task) {
+    protected void validateTask(Task task) {
         if (task.getName() == null || task.getName().isBlank()) {
             throw new ValidationException("Name shouldn't be empty");
         }
@@ -82,6 +91,10 @@ public class KanbanServiceImpl implements KanbanService {
         }
         if (task.getDescription().length() > 250) {
             throw new ValidationException("Description maximum length is 250 characters");
+        }
+
+        if (task.getStatus() != null && !TaskStatus.isValid(task.getStatus())) {
+            throw new ValidationException("Wrong task status");
         }
     }
 }
