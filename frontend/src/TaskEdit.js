@@ -1,5 +1,5 @@
 import {Button, ButtonGroup, Container, Form, FormGroup, Input, Label} from 'reactstrap';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {useEffect, useState} from "react";
 import Select from "react-select";
 
@@ -9,6 +9,7 @@ const TaskEdit = () => {
         description: '',
         status: ''
     };
+    const location = useLocation();
     const [task, setTask] = useState(initialFormState);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ const TaskEdit = () => {
     useEffect(() => {
         setLoading(true);
 
-        fetch('/api/tasks?id=' + id.id, {
+        fetch('/api/' + (location.pathname.includes('epictasks') ? 'epictasks' : location.pathname.includes('subtasks') ? 'subtasks' : 'tasks') + '?id=' + id.id, {
             method: 'GET',
             headers: {'Accept': 'application/json'},
         })
@@ -47,7 +48,7 @@ const TaskEdit = () => {
     const submit = async (event) => {
         event.preventDefault();
 
-        await fetch('/api/tasks?id=' + id.id, {
+        await fetch('/api/' + (location.pathname.includes('epictasks') ? 'epictasks' : location.pathname.includes('subtasks') ? 'subtasks' : 'tasks') + '?id=' + id.id, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -55,25 +56,25 @@ const TaskEdit = () => {
             },
             body: JSON.stringify(task)
         })
-            .then((response) => {
-                if (response.status === 200) {
-                    isUpdated = true;
-                } else {
-                    return response.json();
-                }
-            })
-            .then((data) => {
-                if (isUpdated) {
-                    setTask(initialFormState);
-                    navigate('/');
-                } else {
-                    setError(data.message);
-                }
-            });
+        .then((response) => {
+            if (response.status === 200) {
+                isUpdated = true;
+            } else {
+                return response.json();
+            }
+        })
+        .then((data) => {
+            if (isUpdated) {
+                setTask(initialFormState);
+                navigate('/');
+            } else {
+                setError(data.message);
+            }
+        });
     };
 
     if (loading) {
-        return;
+        return <p>Loading...</p>;
     }
 
     return (
@@ -89,12 +90,16 @@ const TaskEdit = () => {
                         <Input type="textarea" name="description" id="description" value={task.description || ''}
                                onChange={handleChange}/>
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="status">Status</Label>
-                        <Select name="status" id="status" options={statusOptions} onChange={handleChangeStatus}
-                                defaultValue={statusOptions.filter(({value}) => value === task.status)}/>
-                        { error ? <span style={{ color: 'red', fontSize: '12px'}}>{error}</span> : '' }
-                    </FormGroup>
+                    {
+                        !location.pathname.includes('epictasks') ?
+                            <FormGroup>
+                                <Label for="status">Status</Label>
+                                <Select name="status" id="status" options={statusOptions} onChange={handleChangeStatus}
+                                        defaultValue={statusOptions.filter(({value}) => value === task.status)}/>
+                            </FormGroup>
+                            : ''
+                    }
+                    { error ? <span style={{ color: 'red', fontSize: '12px'}}>{error}</span> : '' }
                     <FormGroup>
                         <div align="center" style={{marginBottom: "10px"}}>
                             <ButtonGroup>

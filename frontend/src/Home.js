@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Container, Table } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 const Home = () => {
     const [tasks, setTasks] = useState([]);
@@ -15,19 +15,18 @@ const Home = () => {
                 'Accept': 'application/json'
             }
         })
-            .then(response => response.json())
-            .then(data => {
-                setTasks(data);
-                setLoading(false);
-            })
+        .then(response => response.json())
+        .then(data => {
+            setTasks(data);
+            setLoading(false);
+        })
     }, []);
 
-    const remove = async (id) => {
-        await fetch(`/api/tasks?id=${id}`, {
+    const remove = async (task) => {
+        await fetch('/api/' + (task.subtasks != null ? 'epictasks' : 'tasks') + '?id=' + task.id, {
             method: 'DELETE'
         }).then(() => {
-            let updatedTasks = [...tasks].filter(i => i.id !== id);
-            setTasks(updatedTasks);
+            window.location.reload();
         });
     }
 
@@ -45,16 +44,16 @@ const Home = () => {
             <td>{task.status}</td>
             <td>
                 <ButtonGroup>
-                    <Button size="sm" color="primary" tag={Link} to={"/view/" + task.id}>View</Button>
-                    <Button size="sm" color="warning" tag={Link} to={"/edit/" + task.id}>Edit</Button>
-                    <Button size="sm" color="danger" onClick={() => remove(task.id)}>Delete</Button>
+                    <Button size="sm" color="primary" tag={Link} to={'/view/' + (task.subtasks != null ? 'epictasks' : 'tasks') + '/' + task.id}>View</Button>
+                    <Button size="sm" color="warning" tag={Link} to={'/edit/' + (task.subtasks != null ? 'epictasks' : 'tasks') + '/' + task.id}>Edit</Button>
+                    <Button size="sm" color="danger" onClick={() => remove(task)}>Delete</Button>
                 </ButtonGroup>
             </td>
         </tr>
     });
 
     if (loading) {
-        return;
+        return <p>Loading...</p>;
     }
 
     return (

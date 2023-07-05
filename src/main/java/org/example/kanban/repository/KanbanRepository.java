@@ -25,7 +25,6 @@ public abstract class KanbanRepository {
         Set<Task> allTasks = new HashSet<>();
         allTasks.addAll(tasks.values());
         allTasks.addAll(epictasks.values());
-        allTasks.addAll(subtasks.values());
 
         return allTasks;
     }
@@ -33,7 +32,6 @@ public abstract class KanbanRepository {
     public void deleteAllKanbanTasks() {
         tasks.clear();
         epictasks.clear();
-        subtasks.clear();
     }
 
 
