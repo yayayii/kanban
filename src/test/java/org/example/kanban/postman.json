@@ -2231,7 +2231,7 @@
       "name": "All tasks",
       "item": [
         {
-          "name": "get all tasks with created tasks",
+          "name": "get all tasks with created tasks and epictasks",
           "event": [
             {
               "listen": "prerequest",
@@ -2284,7 +2284,7 @@
                   "});\r",
                   "pm.test(\"Test response body\", () => {\r",
                   "    var jsonData = pm.response.json();\r",
-                  "    pm.expect(jsonData.length, 'length must be 3').to.eql(3);\r",
+                  "    pm.expect(jsonData.length, 'length must be 2').to.eql(2);\r",
                   "});"
                 ],
                 "type": "text/javascript"

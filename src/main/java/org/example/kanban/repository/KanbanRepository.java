@@ -32,6 +32,7 @@ public abstract class KanbanRepository {
     public void deleteAllKanbanTasks() {
         tasks.clear();
         epictasks.clear();
+        subtasks.clear();
     }
 
 
