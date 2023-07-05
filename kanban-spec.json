@@ -11,6 +11,60 @@
     }
   ],
   "paths": {
+    "/api": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskResponseDto"
+                  }
+                }
+              }
+            },
+            "description": "All types of tasks were recieved"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Getting all created types of tasks",
+        "tags": [
+          "All types of tasks"
+        ]
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "All types of tasks were deleted"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Deleting all created types of tasks",
+        "tags": [
+          "All types of tasks"
+        ]
+      }
+    },
     "/api/tasks": {
       "post": {
         "requestBody": {
@@ -66,7 +120,7 @@
                 }
               }
             },
-            "description": "Tasks were recieved"
+            "description": "All tasks were recieved"
           },
           "500": {
             "content": {
@@ -79,28 +133,7 @@
             "description": "Unknown error"
           }
         },
-        "summary": "Getting all created tasks",
-        "tags": [
-          "Tasks"
-        ]
-      },
-      "delete": {
-        "responses": {
-          "200": {
-            "description": "Tasks were deleted"
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
-            },
-            "description": "Unknown error"
-          }
-        },
-        "summary": "Deleting all created tasks",
+        "summary": "Getting all tasks",
         "tags": [
           "Tasks"
         ]
@@ -246,6 +279,448 @@
           "Tasks"
         ]
       }
+    },
+    "/api/subtasks": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubtaskRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Subtask was created"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong request body"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Creating subtask",
+        "tags": [
+          "Subtasks"
+        ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubtaskResponseDto"
+                  }
+                }
+              }
+            },
+            "description": "All subtasks were recieved"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Getting all subtasks",
+        "tags": [
+          "Subtasks"
+        ]
+      }
+    },
+    "/api/subtasks?id=": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Subtask ID",
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subtask was recived"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong ID"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Getting subtask by ID",
+        "tags": [
+          "Subtasks"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "description": "Subtask ID",
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subtask was deleted"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong ID"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Deleting subtask by ID",
+        "tags": [
+          "Subtasks"
+        ]
+      }
+    },
+    "/api/subtasks?id=&epictaskId=": {
+      "put": {
+        "parameters": [
+          {
+            "description": "Subtask ID",
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          },
+          {
+            "description": "Epictask ID",
+            "in": "query",
+            "name": "epictaskId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubtaskUpdateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Subtask was updated"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong ID/request body"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Updating subtask",
+        "tags": [
+          "Subtasks"
+        ]
+      }
+    },
+    "/api/epictasks": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EpictaskRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Subtask was created"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong request body"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Creating epictask",
+        "tags": [
+          "Epictasks"
+        ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EpictaskResponseDto"
+                  }
+                }
+              }
+            },
+            "description": "All epictasks were recieved"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Getting all epictasks",
+        "tags": [
+          "Epictasks"
+        ]
+      }
+    },
+    "/api/epictasks?id=": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Epictask ID",
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Epictask was recived"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong ID"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Getting epictask by ID",
+        "tags": [
+          "Epictasks"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "description": "Epictask ID",
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EpictaskUpdateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Epictask was updated"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong ID/request body"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Updating epictask",
+        "tags": [
+          "Epictasks"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "description": "Epictask ID",
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "long"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Epictask was deleted"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Wrong ID"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            },
+            "description": "Unknown error"
+          }
+        },
+        "summary": "Deleting epictask by ID",
+        "tags": [
+          "Epictasks"
+        ]
+      }
     }
   },
   "components": {
@@ -278,13 +753,13 @@
           "name": {
             "type": "string",
             "maxLength": 25,
-            "description": "Task name",
+            "description": "New task name",
             "example": "Name"
           },
           "description": {
             "type": "string",
             "maxLength": 250,
-            "description": "Task description",
+            "description": "New task description",
             "example": "Description"
           },
           "state": {
@@ -294,9 +769,15 @@
               "In progress",
               "Done"
             ],
+            "description": "New task status",
             "example": "New"
           }
         },
+        "required": [
+          "name",
+          "description",
+          "state"
+        ],
         "description": "Dto for updating a task"
       },
       "TaskResponseDto": {
@@ -325,10 +806,194 @@
               "In progress",
               "Done"
             ],
+            "description": "Task status",
             "example": "New"
           }
         },
         "description": "Dto for getting a task"
+      },
+      "SubtaskRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 25,
+            "description": "Subtask name",
+            "example": "Name"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 250,
+            "description": "Subtask description",
+            "example": "Description"
+          },
+          "epictaskId": {
+            "type": "integer",
+            "description": "Epictask ID",
+            "form": "long",
+            "example": 1
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "epictaskId"
+        ],
+        "description": "Dto for creating a subtask"
+      },
+      "SubtaskUpdateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 25,
+            "description": "Subtask new name",
+            "example": "Name"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 250,
+            "description": "Subtask new description",
+            "example": "Description"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "New",
+              "In progress",
+              "Done"
+            ],
+            "description": "Subtask new status",
+            "example": "New"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "state"
+        ],
+        "description": "Dto for updating a subtask"
+      },
+      "SubtaskResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Subtask ID",
+            "form": "long",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Subtask name",
+            "example": "Name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Subtask description",
+            "example": "Description"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "New",
+              "In progress",
+              "Done"
+            ],
+            "description": "Subtask status",
+            "example": "New"
+          },
+          "epictaskId": {
+            "type": "integer",
+            "description": "Epictask ID",
+            "form": "long",
+            "example": 1
+          }
+        },
+        "description": "Dto for getting a subtask"
+      },
+      "EpictaskRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 25,
+            "description": "Epictask name",
+            "example": "Name"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 250,
+            "description": "Epictask description",
+            "example": "Description"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "description": "Dto for creating an epictask"
+      },
+      "EpictaskUpdateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 25,
+            "description": "Epictask new name",
+            "example": "Name"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 250,
+            "description": "Epictask new description",
+            "example": "Description"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "description": "Dto for updating an epictask"
+      },
+      "EpictaskResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Epictask ID",
+            "form": "long",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Epictask name",
+            "example": "Name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Epictask description",
+            "example": "Description"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "New",
+              "In progress",
+              "Done"
+            ],
+            "description": "Epictask status",
+            "example": "New"
+          },
+          "subtasks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubtaskResponseDto"
+            },
+            "description": "Subtasks"
+          }
+        },
+        "description": "Dto for getting an epictask"
       },
       "ErrorResponseDto": {
         "type": "object",

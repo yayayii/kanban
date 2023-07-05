@@ -1,26 +1,19 @@
 package org.example.kanban.repository;
 
-import lombok.extern.slf4j.Slf4j;
 import org.example.kanban.enum_.TaskStatus;
 import org.example.kanban.model.Task;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-@Slf4j
-public class KanbanInMemoryRepository implements KanbanRepository {
-    private final Map<Long, Task> tasks = new HashMap<>();
-    private long id = 1;
-
-
+public class TaskRepositoryImpl extends KanbanRepository {
     @Override
-    public void createTask(Task task) {
+    public Task createTask(Task task) {
         task.setId(id);
         task.setStatus(TaskStatus.NEW.getStatusName());
         tasks.put(id, task);
         id++;
+
+        return task;
     }
 
     @Override
@@ -29,8 +22,8 @@ public class KanbanInMemoryRepository implements KanbanRepository {
     }
 
     @Override
-    public Collection<Task> getAllTasks() {
-        return tasks.values();
+    public Set<Task> getAllTasks() {
+        return new HashSet<>(tasks.values());
     }
 
     @Override
@@ -43,10 +36,5 @@ public class KanbanInMemoryRepository implements KanbanRepository {
     @Override
     public void deleteTaskById(long id) {
         tasks.remove(id);
-    }
-
-    @Override
-    public void deleteAllTasks() {
-        tasks.clear();
     }
 }
