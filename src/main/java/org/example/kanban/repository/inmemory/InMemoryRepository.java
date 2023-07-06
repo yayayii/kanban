@@ -15,7 +15,7 @@ public abstract class InMemoryRepository implements KanbanRepository {
 
 
     public Set<Task> getRepository() {
-        Set<Task> allTasks = new HashSet<>();
+        Set<Task> allTasks = new TreeSet<>();
         allTasks.addAll(tasks.values());
         allTasks.addAll(epictasks.values());
 

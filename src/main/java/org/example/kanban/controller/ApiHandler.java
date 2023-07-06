@@ -9,9 +9,9 @@ import org.example.kanban.exception.ErrorResponse;
 import org.example.kanban.repository.factory.RepositoryFactory;
 import org.example.kanban.service.KanbanService;
 import org.example.kanban.service.TaskService;
+import org.example.kanban.util.LocalDateTimeTypeAdapter;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -117,19 +117,5 @@ public class ApiHandler {
                 errorStatusCode
         );
         httpExchange.sendResponseHeaders(errorStatusCode, 0);
-    }
-}
-
-class LocalDateTimeTypeAdapter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-    private static final DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    @Override
-    public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
-        return new JsonPrimitive(formatter2.format(localDateTime));
-    }
-
-    @Override
-    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        return LocalDateTime.parse(json.getAsString(), formatter);
     }
 }
