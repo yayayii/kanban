@@ -2,6 +2,7 @@ package org.example.kanban.repository;
 
 import org.example.kanban.enum_.TaskStatus;
 import org.example.kanban.model.Task;
+import org.example.kanban.repository.inmemory.TaskInMemoryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,12 +10,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 public class TaskRepositoryTest {
-    private final KanbanRepository repository = new TaskRepositoryImpl();
+    private final KanbanRepository repository = new TaskInMemoryRepository();
 
 
     @AfterEach
     void tearDown() {
-        repository.deleteAllKanbanTasks();
+        repository.clearRepository();
     }
 
 

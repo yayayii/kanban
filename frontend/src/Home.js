@@ -42,6 +42,7 @@ const Home = () => {
         return <tr key={task.id}>
             <td style={{overflow: "hidden", textOverflow: "ellipsis"}}>{task.name}</td>
             <td>{task.status}</td>
+            <td>{task.endTime}</td>
             <td>
                 <ButtonGroup>
                     <Button size="sm" color="primary" tag={Link} to={'/view/' + (task.subtasks != null ? 'epictasks' : 'tasks') + '/' + task.id}>View</Button>
@@ -65,6 +66,7 @@ const Home = () => {
                         <tr>
                             <th>Name</th>
                             <th>Status</th>
+                            <th>End time</th>
                             <th width="10%">Actions</th>
                         </tr>
                         </thead>

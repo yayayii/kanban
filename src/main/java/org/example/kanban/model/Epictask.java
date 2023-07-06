@@ -2,9 +2,10 @@ package org.example.kanban.model;
 
 import lombok.*;
 
-import java.util.HashSet;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,14 +13,15 @@ import java.util.Set;
 @Getter
 @Setter
 public class Epictask extends Task {
-    private Set<Subtask> subtasks = new HashSet<>();
+    private Set<Subtask> subtasks = new TreeSet<>();
 
 
     @Builder(builderMethodName = "epictaskBuilder")
-    public Epictask(long id, String name, String description, String status, Set<Subtask> subtasks) {
-        super(id, name, description, status);
+    public Epictask(long id, String name, String description, String status, LocalDateTime endTime, Set<Subtask> subtasks) {
+        super(id, name, description, status, endTime);
         this.subtasks = subtasks;
     }
+
 
     @Override
     public boolean equals(Object o) {

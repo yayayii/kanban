@@ -7,7 +7,8 @@ const TaskEdit = () => {
     const initialFormState = {
         name: '',
         description: '',
-        status: ''
+        status: '',
+        endTime: ''
     };
     const location = useLocation();
     const [task, setTask] = useState(initialFormState);
@@ -98,6 +99,14 @@ const TaskEdit = () => {
                                         defaultValue={statusOptions.filter(({value}) => value === task.status)}/>
                             </FormGroup>
                             : ''
+                    }
+                    {
+                        !location.pathname.includes('epictasks') ?
+                            <FormGroup>
+                                <Label for="endTime">End time</Label>
+                                <Input type="datetime-local" name="endTime" id="endTime" defaultValue={task.endTime} onChange={handleChange}/>
+                            </FormGroup>
+                        : ''
                     }
                     { error ? <span style={{ color: 'red', fontSize: '12px'}}>{error}</span> : '' }
                     <FormGroup>
