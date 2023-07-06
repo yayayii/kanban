@@ -8,17 +8,20 @@ import org.example.kanban.repository.inmemory.SubtaskInMemoryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SubtaskRepositoryTest {
-    private KanbanRepository epictaskRepository = new EpictaskInMemoryRepository();
-    private KanbanRepository subtaskRepository = new SubtaskInMemoryRepository();
+    private final KanbanRepository epictaskRepository = new EpictaskInMemoryRepository();
+    private final KanbanRepository subtaskRepository = new SubtaskInMemoryRepository();
 
 
     @AfterEach
     void tearDown() {
         epictaskRepository.clearRepository();
     }
+
 
     //createTask
     @Test
@@ -161,5 +164,32 @@ public class SubtaskRepositoryTest {
 
         subtaskRepository.deleteTaskById(subtask.getId());
         assertEquals("New", epictask.getStatus());
+    }
+
+    //updateEpictaskEndtime
+    @Test
+    void createSubtask_shouldUpdateEpictaskEndtime() {
+        LocalDateTime testLocalDateTime = LocalDateTime.now().plusYears(1);
+        LocalDateTime testLocalDateTime2 = LocalDateTime.now().plusYears(2);
+        Epictask epictask = new Epictask();
+        epictaskRepository.createTask(epictask);
+        Subtask subtask = Subtask.subtaskBuilder().endTime(testLocalDateTime).epictaskId(epictask.getId()).build();
+        Subtask subtask2 = Subtask.subtaskBuilder().endTime(testLocalDateTime2).epictaskId(epictask.getId()).build();
+        subtaskRepository.createTask(subtask);
+        subtaskRepository.createTask(subtask2);
+
+        assertEquals(testLocalDateTime2, epictask.getEndTime());
+    }
+
+    @Test
+    void deleteSubtaskById_shouldClearEpictaskEndtime() {
+        LocalDateTime testLocalDateTime = LocalDateTime.now().plusYears(1);
+        Epictask epictask = new Epictask();
+        epictaskRepository.createTask(epictask);
+        Subtask subtask = Subtask.subtaskBuilder().endTime(testLocalDateTime).epictaskId(epictask.getId()).build();
+        subtaskRepository.createTask(subtask);
+        subtaskRepository.deleteTaskById(subtask.getId());
+
+        assertNull(epictask.getEndTime());
     }
 }

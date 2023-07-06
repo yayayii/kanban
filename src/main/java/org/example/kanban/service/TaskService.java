@@ -7,6 +7,7 @@ import org.example.kanban.model.Task;
 import org.example.kanban.repository.KanbanRepository;
 import org.example.kanban.repository.factory.RepositoryFactory;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Slf4j
@@ -95,9 +96,11 @@ public class TaskService implements KanbanService {
         if (task.getDescription().length() > 250) {
             throw new ValidationException("Description maximum length is 250 characters");
         }
-
         if (task.getStatus() != null && !TaskStatus.isValid(task.getStatus())) {
             throw new ValidationException("Wrong task status");
+        }
+        if (task.getEndTime() != null && task.getEndTime().isBefore(LocalDateTime.now())) {
+            throw new ValidationException("Task end time should be in the future");
         }
     }
 }

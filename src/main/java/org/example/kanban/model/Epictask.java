@@ -2,6 +2,7 @@ package org.example.kanban.model;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -16,10 +17,11 @@ public class Epictask extends Task {
 
 
     @Builder(builderMethodName = "epictaskBuilder")
-    public Epictask(long id, String name, String description, String status, Set<Subtask> subtasks) {
-        super(id, name, description, status);
+    public Epictask(long id, String name, String description, String status, LocalDateTime endTime, Set<Subtask> subtasks) {
+        super(id, name, description, status, endTime);
         this.subtasks = subtasks;
     }
+
 
     @Override
     public boolean equals(Object o) {

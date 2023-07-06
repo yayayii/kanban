@@ -5,6 +5,7 @@ import org.example.kanban.model.Epictask;
 import org.example.kanban.model.Subtask;
 import org.example.kanban.model.Task;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -15,7 +16,9 @@ public class SubtaskInMemoryRepository extends InMemoryRepository {
         subtask.setId(id);
         subtask.setStatus(TaskStatus.NEW.getStatusName());
         subtasks.put(id, (Subtask) subtask);
-        epictasks.get(((Subtask) subtask).getEpictaskId()).getSubtasks().add((Subtask) subtask);
+        Epictask epictask = epictasks.get(((Subtask) subtask).getEpictaskId());
+        epictask.getSubtasks().add((Subtask) subtask);
+        updateEpictaskEndtime(epictask.getId());
         id++;
 
         return subtask;
@@ -36,7 +39,9 @@ public class SubtaskInMemoryRepository extends InMemoryRepository {
         oldSubtask.setName(newSubtask.getName());
         oldSubtask.setDescription(newSubtask.getDescription());
         oldSubtask.setStatus(newSubtask.getStatus());
-        updateEpictaskStatus(((Subtask) oldSubtask).getEpictaskId());
+        Epictask epictask = epictasks.get(((Subtask) oldSubtask).getEpictaskId());
+        updateEpictaskStatus(epictask.getId());
+        updateEpictaskEndtime(epictask.getId());
     }
 
     @Override
@@ -46,5 +51,54 @@ public class SubtaskInMemoryRepository extends InMemoryRepository {
         epictask.getSubtasks().remove(subtask);
         subtasks.remove(id);
         updateEpictaskStatus(epictask.getId());
+        updateEpictaskEndtime(epictask.getId());
+    }
+
+
+    private void updateEpictaskStatus(long epictaskId) {
+        Epictask epictask = epictasks.get(epictaskId);
+        boolean isNew = true;
+        boolean isDone = true;
+
+        Set<Subtask> epicSubtasks = epictask.getSubtasks();
+        for (Subtask subtask: epicSubtasks) {
+            if (!subtask.getStatus().equals(TaskStatus.NEW.getStatusName())) {
+                isNew = false;
+                break;
+            }
+        }
+        for (Subtask subtask: epicSubtasks) {
+            if (!subtask.getStatus().equals(TaskStatus.DONE.getStatusName())) {
+                isDone = false;
+                break;
+            }
+        }
+
+        if (isNew) {
+            epictask.setStatus(TaskStatus.NEW.getStatusName());
+        } else if (isDone) {
+            epictask.setStatus(TaskStatus.DONE.getStatusName());
+        } else {
+            epictask.setStatus(TaskStatus.IN_PROGRESS.getStatusName());
+        }
+    }
+
+    private void updateEpictaskEndtime(long epictaskId) {
+        Epictask epictask = epictasks.get(epictaskId);
+        Optional<Subtask> epictaskEndtime = epictask.getSubtasks().stream().max((o1, o2) -> {
+            if (o1.getEndTime() == null) {
+                return -1;
+            }
+            if (o2.getEndTime() == null) {
+                return 1;
+            }
+            return o1.getEndTime().compareTo(o2.getEndTime());
+        });
+        if (epictaskEndtime.isPresent()) {
+            epictask.setEndTime(epictaskEndtime.get().getEndTime());
+        } else {
+            epictask.setEndTime(null);
+        }
+        epictaskEndtime.ifPresent(subtask -> epictask.setEndTime(subtask.getEndTime()));
     }
 }

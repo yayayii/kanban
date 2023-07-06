@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -73,6 +74,12 @@ public class TaskServiceTest {
     @Test
     void createTask_shouldThrowValidationException_whenTaskStatusIsWrong() {
         Task task = Task.builder().name("name").description("description").status("Qwe").build();
+        assertThrows(ValidationException.class, () -> service.createTask(task));
+    }
+
+    @Test
+    void createTask_shouldThrowValidationException_whenEndtimeIsBeforeNow() {
+        Task task = Task.builder().name("name").description("description").endTime(LocalDateTime.MIN).build();
         assertThrows(ValidationException.class, () -> service.createTask(task));
     }
 
