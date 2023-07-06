@@ -4,23 +4,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.kanban.exception.ValidationException;
 import org.example.kanban.model.Subtask;
 import org.example.kanban.model.Task;
-import org.example.kanban.repository.EpictaskRepositoryImpl;
+import org.example.kanban.repository.factory.RepositoryFactory;
 import org.example.kanban.repository.KanbanRepository;
-import org.example.kanban.repository.SubtaskRepositoryImpl;
 
 @Slf4j
-public class SubtaskServiceImpl extends TaskServiceImpl {
+public class SubtaskService extends TaskService {
     private final KanbanRepository epictaskRepository;
 
 
-    public SubtaskServiceImpl() {
-        super(new SubtaskRepositoryImpl());
-        epictaskRepository = new EpictaskRepositoryImpl();
+    public SubtaskService(RepositoryFactory factory) {
+        super(factory.getSubtaskRepository());
+        epictaskRepository = factory.getEpictaskRepository();
     }
-
-    public SubtaskServiceImpl(KanbanRepository kanbanRepository, KanbanRepository epictaskRepository) {
+    //test constructor
+    public SubtaskService(KanbanRepository kanbanRepository) {
         super(kanbanRepository);
-        this.epictaskRepository = epictaskRepository;
+        this.epictaskRepository = kanbanRepository;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.example.kanban.repository;
+package org.example.kanban.repository.inmemory;
 
 import org.example.kanban.enum_.TaskStatus;
 import org.example.kanban.model.Epictask;
@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class SubtaskRepositoryImpl extends KanbanRepository {
+public class SubtaskInMemoryRepository extends InMemoryRepository {
     @Override
     public Task createTask(Task subtask) {
         subtask.setId(id);

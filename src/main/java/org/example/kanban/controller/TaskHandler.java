@@ -7,8 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.kanban.enum_.ApiPath;
 import org.example.kanban.exception.ValidationException;
 import org.example.kanban.model.Task;
+import org.example.kanban.repository.factory.RepositoryFactory;
+import org.example.kanban.service.KanbanService;
 import org.example.kanban.service.TaskService;
-import org.example.kanban.service.TaskServiceImpl;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -20,12 +21,12 @@ public class TaskHandler extends ApiHandler {
     protected Class<? extends Task> taskType;
 
 
-    public TaskHandler() {
-        super(new TaskServiceImpl(), ApiPath.TASK.getPath());
+    public TaskHandler(RepositoryFactory repository) {
+        super(new TaskService(repository), ApiPath.TASK.getPath());
         taskType = Task.class;
     }
 
-    public TaskHandler(TaskService service, String expectedPath, Class<? extends Task> taskType) {
+    public TaskHandler(KanbanService service, String expectedPath, Class<? extends Task> taskType) {
         super(service, expectedPath);
         this.taskType = taskType;
     }

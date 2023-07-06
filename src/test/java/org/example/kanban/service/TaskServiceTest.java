@@ -24,12 +24,12 @@ import static org.mockito.Mockito.*;
 public class TaskServiceTest {
     @Mock
     private KanbanRepository mockRepository;
-    private TaskService service;
+    private KanbanService service;
 
 
     @BeforeEach
     void setUp() {
-        service = new TaskServiceImpl(mockRepository);
+        service = new TaskService(mockRepository);
     }
 
 
@@ -112,7 +112,7 @@ public class TaskServiceTest {
     @Test
     void getAllKanbanTasks_shouldReturnSet() {
         Set<Task> set = Collections.emptySet();
-        when(mockRepository.getAllKanbanTasks()).thenReturn(set);
+        when(mockRepository.getRepository()).thenReturn(set);
 
         assertEquals(set, service.getAllKanbanTasks());
     }
@@ -152,16 +152,16 @@ public class TaskServiceTest {
     //deleteAllKanbanTasks
     @Test
     void deleteAllKanbanTasks_shouldCallMethod() {
-        doNothing().when(mockRepository).deleteAllKanbanTasks();
+        doNothing().when(mockRepository).clearRepository();
 
         service.deleteAllKanbanTasks();
-        verify(mockRepository).deleteAllKanbanTasks();
+        verify(mockRepository).clearRepository();
     }
 
     //createSubtask
     @Test
     void createSubtask_shouldThrowValidationException_whenOptionalIsEmpty() {
-        TaskService service = new SubtaskServiceImpl();
+        KanbanService service = new SubtaskService(mockRepository);
         Subtask subtask = Subtask.subtaskBuilder().name("name").description("description").build();
 
         assertThrows(ValidationException.class, () -> service.createTask(subtask));
@@ -169,7 +169,7 @@ public class TaskServiceTest {
 
     @Test
     void createSubtask_shouldReturnTask() {
-        TaskService service = new SubtaskServiceImpl(mockRepository, mockRepository);
+        KanbanService service = new SubtaskService(mockRepository);
         Subtask subtask = Subtask.subtaskBuilder().name("name").description("description").build();
         when(mockRepository.getTaskById(anyLong())).thenReturn(Optional.of(subtask));
 

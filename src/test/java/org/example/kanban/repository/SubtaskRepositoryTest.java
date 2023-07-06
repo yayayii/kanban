@@ -3,19 +3,21 @@ package org.example.kanban.repository;
 import org.example.kanban.enum_.TaskStatus;
 import org.example.kanban.model.Epictask;
 import org.example.kanban.model.Subtask;
+import org.example.kanban.repository.inmemory.EpictaskInMemoryRepository;
+import org.example.kanban.repository.inmemory.SubtaskInMemoryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SubtaskRepositoryTest {
-    private KanbanRepository epictaskRepository = new EpictaskRepositoryImpl();
-    private KanbanRepository subtaskRepository = new SubtaskRepositoryImpl();
+    private KanbanRepository epictaskRepository = new EpictaskInMemoryRepository();
+    private KanbanRepository subtaskRepository = new SubtaskInMemoryRepository();
 
 
     @AfterEach
     void tearDown() {
-        epictaskRepository.deleteAllKanbanTasks();
+        epictaskRepository.clearRepository();
     }
 
     //createTask
