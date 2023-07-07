@@ -1,12 +1,13 @@
 package org.example.kanban.repository.factory;
 
 import org.example.kanban.repository.KanbanRepository;
-import org.example.kanban.repository.inmemory.EpictaskInMemoryRepository;
-import org.example.kanban.repository.inmemory.SubtaskInMemoryRepository;
-import org.example.kanban.repository.inmemory.TaskInMemoryRepository;
+import org.example.kanban.repository.implementation.EpictaskInMemoryRepository;
+import org.example.kanban.repository.implementation.SubtaskInMemoryRepository;
+import org.example.kanban.repository.implementation.TaskInMemoryRepository;
 
 public class InMemoryRepositoryFactory implements RepositoryFactory {
     private static RepositoryFactory instance;
+
 
     private InMemoryRepositoryFactory() {
     }
@@ -17,6 +18,7 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
         }
         return instance;
     }
+
 
     @Override
     public KanbanRepository getTaskRepository() {

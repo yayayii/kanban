@@ -3,8 +3,8 @@ package org.example.kanban.repository;
 import org.example.kanban.enum_.TaskStatus;
 import org.example.kanban.model.Epictask;
 import org.example.kanban.model.Subtask;
-import org.example.kanban.repository.inmemory.EpictaskInMemoryRepository;
-import org.example.kanban.repository.inmemory.SubtaskInMemoryRepository;
+import org.example.kanban.repository.implementation.EpictaskInMemoryRepository;
+import org.example.kanban.repository.implementation.SubtaskInMemoryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

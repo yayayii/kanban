@@ -2,7 +2,7 @@ package org.example.kanban.repository;
 
 import org.example.kanban.enum_.TaskStatus;
 import org.example.kanban.model.Task;
-import org.example.kanban.repository.inmemory.TaskInMemoryRepository;
+import org.example.kanban.repository.implementation.TaskInMemoryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

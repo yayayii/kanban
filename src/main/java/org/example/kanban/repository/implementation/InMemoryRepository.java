@@ -1,4 +1,4 @@
-package org.example.kanban.repository.inmemory;
+package org.example.kanban.repository.implementation;
 
 import org.example.kanban.model.Epictask;
 import org.example.kanban.model.Subtask;
@@ -13,7 +13,7 @@ public abstract class InMemoryRepository implements KanbanRepository {
     protected static final Map<Long, Subtask> subtasks = new HashMap<>();
     protected static long id = 1;
 
-
+    @Override
     public Set<Task> getRepository() {
         Set<Task> allTasks = new TreeSet<>();
         allTasks.addAll(tasks.values());
@@ -22,6 +22,7 @@ public abstract class InMemoryRepository implements KanbanRepository {
         return allTasks;
     }
 
+    @Override
     public void clearRepository() {
         tasks.clear();
         epictasks.clear();

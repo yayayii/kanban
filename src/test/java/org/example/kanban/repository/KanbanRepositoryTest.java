@@ -3,9 +3,9 @@ package org.example.kanban.repository;
 import org.example.kanban.model.Epictask;
 import org.example.kanban.model.Subtask;
 import org.example.kanban.model.Task;
-import org.example.kanban.repository.inmemory.EpictaskInMemoryRepository;
-import org.example.kanban.repository.inmemory.SubtaskInMemoryRepository;
-import org.example.kanban.repository.inmemory.TaskInMemoryRepository;
+import org.example.kanban.repository.implementation.EpictaskInMemoryRepository;
+import org.example.kanban.repository.implementation.SubtaskInMemoryRepository;
+import org.example.kanban.repository.implementation.TaskInMemoryRepository;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
