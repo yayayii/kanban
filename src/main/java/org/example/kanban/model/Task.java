@@ -2,6 +2,7 @@ package org.example.kanban.model;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -15,6 +16,8 @@ public class Task {
     private String name;
     private String description;
     private String status;
+    private LocalDateTime endTime;
+
 
     @Override
     public boolean equals(Object o) {

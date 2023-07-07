@@ -3,23 +3,22 @@ package org.example.kanban.repository;
 import org.example.kanban.enum_.TaskStatus;
 import org.example.kanban.model.Epictask;
 import org.example.kanban.model.Subtask;
+import org.example.kanban.repository.implementation.EpictaskInMemoryRepository;
+import org.example.kanban.repository.implementation.SubtaskInMemoryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 public class EpictaskRepositoryTest {
-    private KanbanRepository epictaskRepository = new EpictaskRepositoryImpl();
-    private KanbanRepository subtaskRepository = new SubtaskRepositoryImpl();
+    private final KanbanRepository epictaskRepository = new EpictaskInMemoryRepository();
+    private final KanbanRepository subtaskRepository = new SubtaskInMemoryRepository();
 
 
     @AfterEach
     void tearDown() {
-        epictaskRepository.deleteAllKanbanTasks();
+        epictaskRepository.clearRepository();
     }
 
 

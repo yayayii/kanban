@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.kanban.enum_.ApiPath;
 import org.example.kanban.model.Epictask;
 import org.example.kanban.model.Subtask;
-import org.example.kanban.service.EpictaskServiceImpl;
-import org.example.kanban.service.SubtaskServiceImpl;
+import org.example.kanban.repository.factory.InMemoryRepositoryFactory;
+import org.example.kanban.repository.factory.RepositoryFactory;
+import org.example.kanban.service.EpictaskService;
+import org.example.kanban.service.SubtaskService;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -21,13 +23,14 @@ public class KanbanController {
         this.port = port;
         server = HttpServer.create(new InetSocketAddress(port), 0);
 
-        ApiHandler apiHandler = new ApiHandler();
-        ApiHandler taskHandler = new TaskHandler();
+        RepositoryFactory repository = InMemoryRepositoryFactory.getInstance();
+        ApiHandler apiHandler = new ApiHandler(repository);
+        ApiHandler taskHandler = new TaskHandler(repository);
         ApiHandler epictaskHandler = new TaskHandler(
-                new EpictaskServiceImpl(), ApiPath.EPICTASK.getPath(), Epictask.class
+                new EpictaskService(repository), ApiPath.EPICTASK.getPath(), Epictask.class
         );
         ApiHandler subtaskHandler = new TaskHandler(
-                new SubtaskServiceImpl(), ApiPath.SUBTASK.getPath(), Subtask.class
+                new SubtaskService(repository), ApiPath.SUBTASK.getPath(), Subtask.class
         );
         server.createContext(ApiPath.API.getPath(), apiHandler::createContext);
         server.createContext(ApiPath.TASK.getPath(), taskHandler::createContext);

@@ -7,6 +7,7 @@ const TaskCreate = () => {
     const initialFormState = {
         name: '',
         description: '',
+        endTime: null,
         epictaskId: ''
     };
     const taskTypes = [
@@ -106,6 +107,14 @@ const TaskCreate = () => {
                                         onChange={handleEpictaskChange}/>
                             </FormGroup>
                         : ''
+                    }
+                    {
+                        type !== taskTypes[1].value ?
+                            <FormGroup>
+                                <Label for="endTime">End time</Label>
+                                <Input type="datetime-local" name="endTime" id="endTime" onChange={handleChange}/>
+                            </FormGroup>
+                            : ''
                     }
                     { error ? <span style={{ color: 'red', fontSize: '12px'}}>{error}</span> : '' }
                     <FormGroup>

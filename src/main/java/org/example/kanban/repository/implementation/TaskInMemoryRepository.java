@@ -1,11 +1,11 @@
-package org.example.kanban.repository;
+package org.example.kanban.repository.implementation;
 
 import org.example.kanban.enum_.TaskStatus;
 import org.example.kanban.model.Task;
 
 import java.util.*;
 
-public class TaskRepositoryImpl extends KanbanRepository {
+public class TaskInMemoryRepository extends InMemoryRepository {
     @Override
     public Task createTask(Task task) {
         task.setId(id);

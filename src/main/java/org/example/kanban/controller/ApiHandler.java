@@ -6,8 +6,10 @@ import com.sun.net.httpserver.HttpExchange;
 import lombok.extern.slf4j.Slf4j;
 import org.example.kanban.enum_.ApiPath;
 import org.example.kanban.exception.ErrorResponse;
+import org.example.kanban.repository.factory.RepositoryFactory;
+import org.example.kanban.service.KanbanService;
 import org.example.kanban.service.TaskService;
-import org.example.kanban.service.TaskServiceImpl;
+import org.example.kanban.util.LocalDateTimeTypeAdapter;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -18,18 +20,21 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 public class ApiHandler {
-    protected final Gson gson = new GsonBuilder().serializeNulls().create();
+    protected final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+            .serializeNulls()
+    .create();
     protected final String expectedPath;
-    protected final TaskService service;
+    protected final KanbanService service;
     protected HttpExchange httpExchange;
 
 
-    public ApiHandler() {
+    public ApiHandler(RepositoryFactory repository) {
         expectedPath = ApiPath.API.getPath();
-        service = new TaskServiceImpl();
+        service = new TaskService(repository);
     }
 
-    public ApiHandler(TaskService service, String expectedPath) {
+    public ApiHandler(KanbanService service, String expectedPath) {
         this.expectedPath = expectedPath;
         this.service = service;
     }

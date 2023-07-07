@@ -8,7 +8,8 @@ const TaskView = () => {
         name: '',
         description: '',
         status: '',
-        subtasks: []
+        subtasks: [],
+        endTime: ''
     };
     const location = useLocation();
     const [task, setTask] = useState(initialFormState);
@@ -54,20 +55,11 @@ const TaskView = () => {
 
     if (task.subtasks != null) {
         subtasks = task.subtasks.map(subtask => {
-            return <Container fluid>
-                <div style={{maxWidth: "75%", marginLeft: "auto", marginRight: "auto"}}>
-                    <Table className="mt-4" style={{tableLayout: "fixed"}}>
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Status</th>
-                            <th width="10%">Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+            return <tbody>
                         <tr key={subtask.id}>
                             <td style={{overflow: "hidden", textOverflow: "ellipsis"}}>{subtask.name}</td>
                             <td>{subtask.status}</td>
+                            <td>{subtask.endTime}</td>
                             <td>
                                 <ButtonGroup>
                                     <Button size="sm" color="primary" tag={Link} to={'/view/subtasks/' + subtask.id}>View</Button>
@@ -76,10 +68,7 @@ const TaskView = () => {
                                 </ButtonGroup>
                             </td>
                         </tr>
-                        </tbody>
-                    </Table>
-                </div>
-            </Container>
+                    </tbody>
         });
     }
 
@@ -99,7 +88,25 @@ const TaskView = () => {
                         <Label for="status">Status</Label>
                         <Input disabled name="status" id="status" value={task.status}/>
                     </FormGroup>
-                    {subtasks}
+                    <FormGroup>
+                        <Label for="endTime">End time</Label>
+                        <Input disabled name="endTime" id="endTime" value={task.endTime}/>
+                    </FormGroup>
+                    {task.subtasks != null ? <Container fluid>
+                        <div style={{maxWidth: "75%", marginLeft: "auto", marginRight: "auto"}}>
+                            <Table className="mt-4" style={{tableLayout: "fixed"}}>
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>End time</th>
+                                    <th width="10%">Actions</th>
+                                </tr>
+                                </thead>
+                                {subtasks}
+                            </Table>
+                        </div>
+                    </Container> : ''}
                     <FormGroup>
                         <div align="center" style={{marginBottom: "10px"}}>
                             <ButtonGroup>

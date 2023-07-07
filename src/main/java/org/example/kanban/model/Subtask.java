@@ -2,6 +2,7 @@ package org.example.kanban.model;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -14,10 +15,11 @@ public class Subtask extends Task {
 
 
     @Builder(builderMethodName = "subtaskBuilder")
-    public Subtask(long id, String name, String description, String status, long epictaskId) {
-        super(id, name, description, status);
+    public Subtask(long id, String name, String description, String status, LocalDateTime endTime, long epictaskId) {
+        super(id, name, description, status, endTime);
         this.epictaskId = epictaskId;
     }
+
 
     @Override
     public boolean equals(Object o) {
