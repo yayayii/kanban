@@ -85,6 +85,9 @@ public class SubtaskInMemoryRepository extends InMemoryRepository {
     private void updateEpictaskEndtime(long epictaskId) {
         Epictask epictask = epictasks.get(epictaskId);
         Optional<Subtask> epictaskEndtime = epictask.getSubtasks().stream().max((o1, o2) -> {
+            if (o1.getEndTime() == null && o2.getEndTime() == null) {
+                return 0;
+            }
             if (o1.getEndTime() == null) {
                 return -1;
             }

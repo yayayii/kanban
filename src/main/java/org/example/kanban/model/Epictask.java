@@ -3,9 +3,9 @@ package org.example.kanban.model;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeSet;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,7 +13,7 @@ import java.util.TreeSet;
 @Getter
 @Setter
 public class Epictask extends Task {
-    private Set<Subtask> subtasks = new TreeSet<>();
+    private Set<Subtask> subtasks = new HashSet<>();
 
 
     @Builder(builderMethodName = "epictaskBuilder")
