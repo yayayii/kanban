@@ -2,7 +2,6 @@
 
 ![Screenshot](image.png)
 
----
 ## Description
 The application allows to create and edit three types of tasks:
 * Task
@@ -24,12 +23,11 @@ Main packages:
 
 Swagger specification: /kanban-spec.json
 
----
 ## Requirements
 * JDK 11
 * Apache Maven 4.0.0
 * Node.js 9.5.1
----
+
 ## Running
 ### backend
 
@@ -48,7 +46,6 @@ From the command line in the root directory
 
 Access frontend at http://localhost:3030
 
----
 ## Used technologies
 * Java (backend code)
 * Apache Maven (build tool)
